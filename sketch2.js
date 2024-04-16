@@ -1,4 +1,4 @@
-let sleepFIle;
+let sleepFile;
 
 // Get the selected file when input changes
 document.getElementById("sleepFile").addEventListener("change", (event) => {
@@ -55,11 +55,11 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
   };
 });
 let weightFile;
-document.getElementById("activityFile").addEventListener("change", (event) => {
+document.getElementById("weightFile").addEventListener("change", (event) => {
   weightFile = event.target.files[0]; // selecting the file
 });
 
-document.getElementById("upload-button2").addEventListener("click", (e) => {
+document.getElementById("upload-button").addEventListener("click", (e) => {
   e.preventDefault();
   let fileReader2 = new FileReader();
 
@@ -77,8 +77,7 @@ document.getElementById("upload-button2").addEventListener("click", (e) => {
       { dateNF: "mm/dd/yyyy" }
     );
 
-    var cal_total = [];
-    var steps = [];
+    var weight_lbs = [];
 
     // Change each sheet in the workbook to json
     workbook.SheetNames.forEach(async (sheet) => {
@@ -87,12 +86,10 @@ document.getElementById("upload-button2").addEventListener("click", (e) => {
       });
 
       for(var i = 0; i < result2.length; i++){
-        cal_total.push(result2[i].cal_total);
-        steps.push(result2[i].steps)
+        weight_lbs.push(result2[i].weight_lbs)
       }
         
-      console.log("Calories total data :"+ `\n` + cal_total);
-      console.log("Total step data :"+ `\n` + steps);
+      console.log("Total weight data :"+ `\n` + weight_lbs);
      
       
 
@@ -109,7 +106,7 @@ function setup(){
 }
 
 function draw(){
-  background(0,180,255);
+
 }
 
 function windowResized(){
