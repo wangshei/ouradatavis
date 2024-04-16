@@ -54,12 +54,13 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
     });
   };
 });
+
 let weightFile;
 document.getElementById("weightFile").addEventListener("change", (event) => {
   weightFile = event.target.files[0]; // selecting the file
 });
 
-document.getElementById("upload-button").addEventListener("click", (e) => {
+document.getElementById("upload-button2").addEventListener("click", (e) => {
   e.preventDefault();
   let fileReader2 = new FileReader();
 
