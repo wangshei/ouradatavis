@@ -54,9 +54,9 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
     });
   };
 });
-let activityFile;
+let weightFile;
 document.getElementById("activityFile").addEventListener("change", (event) => {
-  activityFile = event.target.files[0]; // selecting the file
+  weightFile = event.target.files[0]; // selecting the file
 });
 
 document.getElementById("upload-button2").addEventListener("click", (e) => {
