@@ -60,7 +60,7 @@ document.getElementById("weightFile").addEventListener("change", (event) => {
   weightFile = event.target.files[0]; // selecting the file
 });
 
-document.getElementById("upload-button2").addEventListener("click", (e) => {
+document.getElementById("upload-button").addEventListener("click", (e) => {
   e.preventDefault();
   let fileReader2 = new FileReader();
 
@@ -102,12 +102,13 @@ document.getElementById("upload-button2").addEventListener("click", (e) => {
 
 function setup(){
   var canvas = createCanvas(windowWidth, windowHeight);
-  canvas.parent("sketch");
+  canvas.parent("sketch2");
   frameRate(60);
 }
 
 function draw(){
-
+  line(65,508,818,508);
+  line(65,100,65,508);
 }
 
 function windowResized(){
