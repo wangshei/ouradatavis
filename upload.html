@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html class="no-js">
+	<head>
+		<meta charset="utf-8">
+    	<title>Data Loader</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="styles.css" />
+		<script
+   src="https://cdn.jsdelivr.net/npm/xlsx@0.16.8/dist/xlsx.full.min.js"
+   integrity="sha256-Ic7HP804IrYks4vUqX1trFF1Nr33RjONeJESZnYxsOY="
+   crossorigin="anonymous"></script>
+		<script src="p5.min.js"></script>
+  </head>
+
+  <body>
+
+    <div id="sketch">
+	</div>
+
+	<form class="input-group col-4 mb-5">
+		<p>Choose Sleep File</p>
+		<input type="file" class="form-control" id="sleepFile" />
+		<button class="btn ml-2" type="submit" id="upload-button">
+		 Upload
+		</button><br>
+		<p>Choose Activity File</p>
+		<input type="file" class="form-control" id="activityFile" />
+		<button class="btn ml-2" type="submit" id="upload-button2">
+		 Upload
+		</button>
+   </form>
+
+   
+		<script src="sketchfile.js"></script>
+
+  </body>
+</html>
