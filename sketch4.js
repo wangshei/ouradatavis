@@ -48,64 +48,61 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
       console.log("Rem sleep data :"+ `\n` + rem);
       console.log("Deep sleep data :"+ `\n` + deep);
       console.log("Total sleep data :"+ `\n` + total);
-      console.log("Efficiency data :"+`\n` + total);
+      console.log("Efficiency data :"+`\n` + efficiency);
      
     
       console.log(result);
     });
   };
 });
-let weightFile;
-document.getElementById("activityFile").addEventListener("change", (event) => {
-  weightFile = event.target.files[0]; // selecting the file
-});
-
-document.getElementById("upload-button2").addEventListener("click", (e) => {
-  e.preventDefault();
-  let fileReader2 = new FileReader();
-
-  // Read the selected file as binary string
-  fileReader2.readAsBinaryString(weightFile);
-
-  // Process the file data when it's loaded
-  fileReader2.onload = (event) => {
-    let fileData2 = event.target.result;
-
-    // Read the Excel workbook
-    let workbook = XLSX.read(
-      fileData2,
-      { type: "binary" },
-      { dateNF: "mm/dd/yyyy" }
-    );
-
-    var cal_total = [];
-    var steps = [];
-
-    // Change each sheet in the workbook to json
-    workbook.SheetNames.forEach(async (sheet) => {
-      const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
-        raw: false,
-      });
-
-      for(var i = 0; i < result2.length; i++){
-        cal_total.push(result2[i].cal_total);
-        steps.push(result2[i].steps)
-      }
-        
-      console.log("Calories total data :"+ `\n` + cal_total);
-      console.log("Total step data :"+ `\n` + steps);
-     
-      
-
-
-      console.log(result2);
+let activityFile;
+    document.getElementById("activityFile").addEventListener("change", (event) => {
+      activityFile = event.target.files[0]; // selecting the file
     });
-  };
-});
+    
+    document.getElementById("upload-button").addEventListener("click", (e) => {
+      e.preventDefault();
+      let fileReader2 = new FileReader();
+    
+      // Read the selected file as binary string
+      fileReader2.readAsBinaryString(activityFile);
+    
+      // Process the file data when it's loaded
+      fileReader2.onload = (event) => {
+        let fileData2 = event.target.result;
+    
+        // Read the Excel workbook
+        let workbook = XLSX.read(
+          fileData2,
+          { type: "binary" },
+          { dateNF: "mm/dd/yyyy" }
+        );
+    
+        var steps = [];
+    
+        // Change each sheet in the workbook to json
+        workbook.SheetNames.forEach(async (sheet) => {
+          const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+            raw: false,
+          });
+    
+          for(var i = 0; i < result2.length; i++){
+            steps.push(result2[i].steps)
+          }
+            
+          console.log("Total step data :"+ `\n` + steps);
+         
+          
+    
+    
+          console.log(result2);
+        });
+      };
+    });
 
 function setup(){
   var canvas = createCanvas(windowWidth, windowHeight);
-  canvas.parent("sketch");
+  canvas.parent("sketch4");
   frameRate(60);
 }
 
