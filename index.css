@@ -251,6 +251,10 @@ p2{
     gap:4px;
 }
 
+h2{
+    margin:0;
+}
+
 
 .modal {
     display: none;
@@ -269,7 +273,7 @@ p2{
     background-color: white;
     padding: 40px;
     border-radius: 5px;
-    width:60%;
+    width:40%;
     height:60%;
 
     display: flex;
