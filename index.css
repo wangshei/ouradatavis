@@ -189,17 +189,28 @@ p{
     align-items: flex-start;
     border-radius: 40px;
     border: 1px solid #D5D9FE;
-
+    
     background: #FFF;
 }
 
 #graph-section{
-    width: calc(60% - 48px);
+    width: calc(60% - 48px - 80px);
     gap: 40px;
     align-self: stretch;
+    position:relative;
 
 }
-
+.graph{
+    position: absolute;
+    border-radius: 40px;
+    padding:40px;
+    top: 0;
+    left: 0;
+    width: calc(100%  - 80px);
+    height: calc(100% - 80px);
+    background-color: #FFF;
+    z-index:0;
+}
 #insights-section{
     gap: 24px;
     flex: 1 0 0;
@@ -342,4 +353,16 @@ button{
     display:flex;
     justify-content: center;
     margin-top: auto;
+}
+
+#overview-graph{
+    display:block;
+}
+
+#sleep-graph{
+    display:none;
+}
+
+#activity-graph{
+    display:none;
 }

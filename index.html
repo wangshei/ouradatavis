@@ -54,7 +54,11 @@
           <div class="tab">Activity</div>
         </div>
         <div id="content">
-          <div class="tile" id="graph-section"></div>
+          <div class="tile" id="graph-section">
+            <div id="overview-graph" class="graph">Overview lol</div>
+            <div id="sleep-graph" class="graph">Sleep lol</div>
+            <div id="activity-graph" class="graph">activities lol</div>
+          </div>
           <div class="tile" id="insights-section">
             <div class="title">Insights</div>
             <div id="insights-content">
@@ -113,10 +117,27 @@
 
     <script defer>
       const tabs = document.querySelectorAll(".tab");
+      const overviewGraph = document.getElementById("overview-graph");
+      const sleepGraph = document.getElementById("sleep-graph");
+      const activityGraph = document.getElementById("activity-graph");
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
           tabs.forEach((t) => t.removeAttribute("id"));
           tab.setAttribute("id", "selected");
+
+          if (tab.innerHTML === "Overview") {
+            overviewGraph.style.display = "block";
+            sleepGraph.style.display = "none";
+            activityGraph.style.display = "none";
+          } else if (tab.innerHTML === "Sleep") {
+            overviewGraph.style.display = "none";
+            sleepGraph.style.display = "block";
+            activityGraph.style.display = "none";
+          } else if (tab.innerHTML === "Activity") {
+            overviewGraph.style.display = "none";
+            sleepGraph.style.display = "none";
+            activityGraph.style.display = "block";
+          }
         });
       });
       document.addEventListener("DOMContentLoaded", function () {
