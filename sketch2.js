@@ -52,6 +52,8 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
           onset_latency.push(result[i].onset_latency);
           summary_date.push(result[i].summary_date);
         }
+
+        bar_width = 800/(total.length);
                 
       console.log("Light sleep data :"+ `\n` + light);
       console.log("Rem sleep data :"+ `\n` + rem);
@@ -131,7 +133,6 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
 function checkDataProcessed() {
   if (sleepDataProcessed && weightDataProcessed) {
     console.log("Data is processed, initializing p5 sketch...");
-    initializeSketch();
   } 
   if (!sleepDataProcessed && !weightDataProcessed){
     console.log("No data is being processed");
@@ -143,30 +144,25 @@ function checkDataProcessed() {
   }
 }
 
-function initializeSketch() {
-  console.log("Initializing p5 sketch..."); // Debug to confirm this runs
-  new p5();
-  noLoop(); // Stop continuous drawing if not necessary
-}
 
 let duration;
 duration = "total";
 let latency_height;
-let width;
+let bar_width;
 
 function setup(){
   var canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent("sketch2");
   console.log("Setup complete, summary_date.length:", summary_date.length);
+  //noLoop();
 
   
-  if (summary_date.length>0){
-    if (duration === "total"){
-      width = 800/(total.length);
-      console.log("Width per bar: ", width);
-    }
-  }
-  noLoop();
+  // if (summary_date.length>0){
+  //   if (duration === "total"){
+  //     bar_width = 800/(total.length);
+  //     console.log("Width per bar: ", bar_width);
+  //   }
+  // }
 }
 
 
@@ -175,29 +171,64 @@ function draw(){
 
     //x index
     //background(255);
-    fill(0,250,0);
-    line(65,508,865,508);
-    // y index
-    line(65,100,65,508);
-    noLoop();
-    rect(0, 50, 150, 150);  // Should definitely be visible
+    
+    //rect(0, 50, 150, 150);  // Should definitely be visible
 
     // calculate the width of each bar
     // draw rectangle for latency 
     //if(width> 0 && summary_date.length>0){
+      fill(0,100,0);
+      stroke(255);
+
     for (var i = 0; i<summary_date.length; i++){
-      fill(255, 0, i * 5); 
-      let barHeight = onset_latency[i] / 36;
-      let yPos = 508 - barHeight;
-      let xPos = 70 + i * width;
-      rect(xPos, yPos, width, barHeight);
+      stroke(0);
+      fill(255,255,255);
+
+      let barHeight = onset_latency[i] / 90;
+      let yPos = 508 - barHeight-1;
+      let xPos = 70 + i * bar_width;
+      rect(xPos, yPos, bar_width, barHeight);
+      console.log(`Drawing latency at index ${i}: xPos=${xPos}, yPos=${yPos}, bar_width=${bar_width}, height=${barHeight}`);
+
+      stroke(255);
+      fill(224,227,255);      
+      let barHeight2 = light[i] / 90;
+      let yPos2 = yPos - barHeight2-1;
+      let xPos2 = 70 + i * bar_width+1;
+      rect(xPos2, yPos2, bar_width, barHeight2);
+      console.log(`Drawing light at index ${i}: xPos=${xPos2}, yPos=${yPos2}, bar_width=${bar_width}, height=${barHeight2}`);
+      
+      fill(207,207,245);
+      let barHeight3 = rem[i] / 90;
+      let yPos3 = yPos2 - barHeight3-1;
+      let xPos3 = 70 + i * bar_width+1;
+      rect(xPos3, yPos3, bar_width, barHeight3);
+      console.log(`Drawing light at index ${i}: xPos=${xPos3}, yPos=${yPos3}, bar_width=${bar_width}, height=${barHeight3}`);
+
+      
+      fill(184,183,242);
+
+      let barHeight4 = deep[i] / 90;
+      let yPos4 = yPos3 - barHeight4-1;
+      let xPos4 = 70 + i * bar_width+1;
+      rect(xPos4, yPos4, bar_width, barHeight4);
+      console.log(`Drawing light at index ${i}: xPos=${xPos4}, yPos=${yPos4}, bar_width=${bar_width}, height=${barHeight4}`);
+
+      text(summary_date[i],508,875);
+      console.log(summary_date[i]);
+
       noLoop();
-      console.log(`Drawing latency at index ${i}: xPos=${xPos}, yPos=${yPos}, width=${width}, height=${barHeight}`);
 
     }
   //}
-  
-  
+  stroke(0);
+
+    fill(0,250,0);
+
+    line(65,508,865,508);
+    // y index
+    line(65,100,65,508);
+
     
   }
 
