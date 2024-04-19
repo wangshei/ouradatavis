@@ -17,6 +17,9 @@ var summary_date = [];
 var weight_lbs = [];
 var day_weight = [];
 
+let bar_width;
+let longest;
+
 // Handle upload button click
 document.getElementById("upload-button").addEventListener("click", (e) => {
   e.preventDefault();
@@ -53,7 +56,16 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
           summary_date.push(result[i].summary_date);
         }
 
+        longest = 0;
         bar_width = 800/(total.length);
+        for(var i = 0; i <= total.length; i++){
+          var t = float(total[i]);
+          if (t>longest){
+            longest = t;
+            //console.log(longest + "is longest");
+          }
+        }
+        
                 
       console.log("Light sleep data :"+ `\n` + light);
       console.log("Rem sleep data :"+ `\n` + rem);
@@ -148,7 +160,8 @@ function checkDataProcessed() {
 let duration;
 duration = "total";
 let latency_height;
-let bar_width;
+
+
 
 function setup(){
   var canvas = createCanvas(windowWidth, windowHeight);
@@ -177,9 +190,31 @@ function draw(){
     // calculate the width of each bar
     // draw rectangle for latency 
     //if(width> 0 && summary_date.length>0){
-      fill(0,100,0);
+      
       stroke(255);
+      fill(0);
+      textAlign(RIGHT, CENTER);
 
+      console.log(longest + ","+ longest/3600);
+      for (var i = 0; i<=longest;i+=3600){
+        var ypos = map(i, 0, longest,508,50 )
+        text(i/3600+"hour",60,ypos); // this is the only thing that will change style
+      }
+      textAlign(LEFT, CENTER);
+
+      for (var i = 0; i<summary_date.length; i++){
+       if (i%2==0){
+        push();
+        translate(70 + i * bar_width+10, 512);
+        rotate(HALF_PI/2); // default is radiants
+        text(summary_date[i],0,0);
+        console.log(summary_date[i]);
+        pop(); // go back to the original codition so we can isolate different things)
+    
+        }
+  
+      }
+      
     for (var i = 0; i<summary_date.length; i++){
       stroke(0);
       fill(255,255,255);
@@ -200,7 +235,7 @@ function draw(){
       
       fill(207,207,245);
       let barHeight3 = rem[i] / 90;
-      let yPos3 = yPos2 - barHeight3-1;
+      let yPos3 = yPos2 - barHeight3;
       let xPos3 = 70 + i * bar_width+1;
       rect(xPos3, yPos3, bar_width, barHeight3);
       console.log(`Drawing light at index ${i}: xPos=${xPos3}, yPos=${yPos3}, bar_width=${bar_width}, height=${barHeight3}`);
@@ -209,26 +244,32 @@ function draw(){
       fill(184,183,242);
 
       let barHeight4 = deep[i] / 90;
-      let yPos4 = yPos3 - barHeight4-1;
+      let yPos4 = yPos3 - barHeight4;
       let xPos4 = 70 + i * bar_width+1;
       rect(xPos4, yPos4, bar_width, barHeight4);
       console.log(`Drawing light at index ${i}: xPos=${xPos4}, yPos=${yPos4}, bar_width=${bar_width}, height=${barHeight4}`);
-
-      text(summary_date[i],508,875);
-      console.log(summary_date[i]);
-
+      
       noLoop();
-
     }
+
+    
   //}
+  
+
   stroke(0);
 
-    fill(0,250,0);
+    fill(0);
 
     line(65,508,865,508);
     // y index
-    line(65,100,65,508);
+    line(65,50,65,508);
+    stroke(255);
 
+    textAlign(CENTER, CENTER);
+    text("Duration", 65, 45);
+
+    textAlign(LEFT, CENTER);
+    text("Date", 875, 508);
     
   }
 
