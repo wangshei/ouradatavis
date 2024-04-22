@@ -65,6 +65,19 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
             //console.log(longest + "is longest");
           }
         }
+        lightest = 1000;
+        heaviest = 0;
+        for(var i = 0; i <= weight_lbs.length; i++){
+          var t = float(weight_lbs[i]);
+          if (t>heaviest){
+            heaviest = t;
+            //console.log(longest + "is longest");
+          }
+          if (t<lightest){
+            lightest = t;
+            //console.log(longest + "is longest");
+          }
+        }
         
                 
       console.log("Light sleep data :"+ `\n` + light);
@@ -208,7 +221,7 @@ function draw(){
         translate(70 + i * bar_width+10, 512);
         rotate(HALF_PI/2); // default is radiants
         text(summary_date[i],0,0);
-        console.log(summary_date[i]);
+        //console.log(summary_date[i]);
         pop(); // go back to the original codition so we can isolate different things)
     
         }
@@ -223,7 +236,7 @@ function draw(){
       let yPos = 508 - barHeight-1;
       let xPos = 70 + i * bar_width;
       rect(xPos, yPos, bar_width, barHeight);
-      console.log(`Drawing latency at index ${i}: xPos=${xPos}, yPos=${yPos}, bar_width=${bar_width}, height=${barHeight}`);
+      //console.log(`Drawing latency at index ${i}: xPos=${xPos}, yPos=${yPos}, bar_width=${bar_width}, height=${barHeight}`);
 
       stroke(255);
       fill(224,227,255);      
@@ -231,14 +244,14 @@ function draw(){
       let yPos2 = yPos - barHeight2-1;
       let xPos2 = 70 + i * bar_width+1;
       rect(xPos2, yPos2, bar_width, barHeight2);
-      console.log(`Drawing light at index ${i}: xPos=${xPos2}, yPos=${yPos2}, bar_width=${bar_width}, height=${barHeight2}`);
+      //console.log(`Drawing light at index ${i}: xPos=${xPos2}, yPos=${yPos2}, bar_width=${bar_width}, height=${barHeight2}`);
       
       fill(207,207,245);
       let barHeight3 = rem[i] / 90;
       let yPos3 = yPos2 - barHeight3;
       let xPos3 = 70 + i * bar_width+1;
       rect(xPos3, yPos3, bar_width, barHeight3);
-      console.log(`Drawing light at index ${i}: xPos=${xPos3}, yPos=${yPos3}, bar_width=${bar_width}, height=${barHeight3}`);
+      //console.log(`Drawing light at index ${i}: xPos=${xPos3}, yPos=${yPos3}, bar_width=${bar_width}, height=${barHeight3}`);
 
       
       fill(184,183,242);
@@ -247,9 +260,18 @@ function draw(){
       let yPos4 = yPos3 - barHeight4;
       let xPos4 = 70 + i * bar_width+1;
       rect(xPos4, yPos4, bar_width, barHeight4);
-      console.log(`Drawing light at index ${i}: xPos=${xPos4}, yPos=${yPos4}, bar_width=${bar_width}, height=${barHeight4}`);
+      //console.log(`Drawing light at index ${i}: xPos=${xPos4}, yPos=${yPos4}, bar_width=${bar_width}, height=${barHeight4}`);
       
-      noLoop();
+      stroke(0);
+
+      let weight_x1 = 70+ bar_width*[i];
+      let weight_y1 = (weight_lbs[i]-lightest)*(-20)+508;
+      let weight_x2 = 70+ bar_width*[i+1];
+      let weight_y2 = (weight_lbs[i+1]-lightest)*(-20)+508;
+      line(weight_x1,weight_y1, weight_x2, weight_y2);
+      console.log(`Drawing line at index ${i}: xPos=${weight_x1}, yPos=${weight_y1}, xPos2=${weight_x2}, height=${weight_y2}`);
+
+      //noLoop();
     }
 
     
