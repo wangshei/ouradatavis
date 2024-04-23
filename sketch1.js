@@ -88,6 +88,7 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
 
         // Create dateTimestamps array
         var dateTimestamps = sleepsummarydate.map((dateString) => {
+          noStroke();
           var parts = dateString.split("/");
           var year = parseInt(parts[2]) + 2000; // Assuming the year is represented as two digits
           var month = parseInt(parts[0]) - 1; // Months are 0-indexed in JavaScript
@@ -279,6 +280,7 @@ function setup() {
 }
 
 function draw() {
+  noStroke();
   stroke(0);
   fill(0);
 
@@ -286,9 +288,11 @@ function draw() {
 
   // Draw hash marks and labels on the y-axis
   for (let i = 0; i <= 10; i++) {
+    
     let y = map(i / 10, 0, 1, height - 50, 50); // Calculate y-coordinate for each hash mark
     line(60, y, 65, y); // Draw the hash mark
     textAlign(RIGHT, CENTER);
+    noStroke();
     text(i / 10, 60, y); // Label the hash mark
   }
 
@@ -304,7 +308,7 @@ function draw() {
   }
 
   // Draw lines connecting sleep score data points
-  stroke(0, 0, 255);
+  stroke(64, 119, 27);
   for (let i = 0; i < sleepsummarydate.length - 1; i++) {
     let x1 = xPositions[i];
     let y1 = map(sleepscore[i], 0, 100, height - 50, 50);
@@ -314,7 +318,7 @@ function draw() {
   }
 
   // Draw lines connecting activity score data points
-  stroke(255, 0, 0); // Change color to red
+  stroke(134, 77, 191); // Change color to red
   for (let i = 0; i < activitysummarydate.length - 1; i++) {
     let x1 = xPositions[i];
     let y1 = map(activityscore[i], 0, 100, height - 50, 50);
@@ -324,7 +328,7 @@ function draw() {
   }
 
   // Draw lines connecting weight score data points
-  stroke(0, 255, 0); // Change color to green
+  stroke(0, 164, 186); // Change color to green
   for (let i = 0; i < weightsummarydate.length - 1; i++) {
     let x1 = xPositions[i];
     let y1 = map(normalizedWeightScores[i], 0, 1, height - 50, 50);
@@ -334,7 +338,7 @@ function draw() {
   }
 
   // Draw lines connecting readiness score data points
-  stroke(160, 32, 240); // Change color to purple
+  stroke(211, 100, 100); // Change color to purple
   for (let i = 0; i < readinesssummarydate.length - 1; i++) {
     let x1 = xPositions[i];
     let y1 = map(normalizedReadinessScores[i], 0, 1, height - 50, 50);
@@ -389,7 +393,7 @@ function draw() {
   fill(0);
   line(65, 765, 865, 765); // x-axis
   line(65, 50, 65, 765); // y-axis
-  stroke(255);
+  noStroke(0);
   textAlign(CENTER, CENTER);
   text("score", 65, 20); // y-axis label
   textAlign(LEFT, CENTER);
