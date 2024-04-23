@@ -253,11 +253,11 @@ function draw(){
                   var t = float(weight_lbs[i]);
                   if (t>heaviest){
                     heaviest = t;
-                    console.log(heaviest + "is heaviest");
+                    //console.log(heaviest + "is heaviest");
                   }
                   if (t<lightest){
                     lightest = t;
-                    console.log(lightest + "is lightest");
+                    //console.log(lightest + "is lightest");
                   }
                 }
   //console.log("Draw function is running."); // Check how often this logs
@@ -311,6 +311,7 @@ function draw(){
       let xPos = xtop + 5 + i * bar_width+1;
       rect(xPos, yPos, bar_width, barHeight);
       //console.log(`Drawing latency at index ${i}: xPos=${xPos}, yPos=${yPos}, bar_width=${bar_width}, height=${barHeight}`);
+ 
 
       fill(224,227,255);      
       let barHeight2 = light[i] / ((longest-0)/graphheight);
@@ -319,15 +320,15 @@ function draw(){
       rect(xPos2, yPos2, bar_width, barHeight2);
       //console.log(`Drawing light at index ${i}: xPos=${xPos2}, yPos=${yPos2}, bar_width=${bar_width}, height=${barHeight2}`);
       
-      fill(207,207,245);
+      fill(165,164,201);
       let barHeight3 = rem[i] / ((longest-0)/graphheight);
       let yPos3 = yPos2 - barHeight3;
       let xPos3 = xtop + 5 + i * bar_width+1;
       rect(xPos3, yPos3, bar_width, barHeight3);
       //console.log(`Drawing light at index ${i}: xPos=${xPos3}, yPos=${yPos3}, bar_width=${bar_width}, height=${barHeight3}`);
 
-      
-      fill(184,183,242);
+      fill(29,27,119);
+
 
       let barHeight4 = deep[i] / ((longest-0)/graphheight);
       let yPos4 = yPos3 - barHeight4;
@@ -371,13 +372,86 @@ function draw(){
     stroke(255);
 
     textAlign(CENTER, CENTER);
-    text("Duration", xtop, ytop-20);
+    text("Duration", xtop, ytop-15);
 
     textAlign(CENTER, CENTER);
-    text("Weight", xbottom, ytop-20);
+    text("Weight", xbottom, ytop-15);
     
+    text(message, (xbottom+xtop)/2, ytop-15)
+    console.log(message)
+   
   }
 
+  let message;
+
+  function mouseMoved(){
+    // fill(230, 232, 243);
+    // stroke(230, 232, 243);
+
+  //console.log("mouse move called")
+    for (var i = 0; i<summary_date.length; i++){
+      
+
+      let barHeight = onset_latency[i] / ((longest-0)/graphheight);
+      let yPos = ybottom - barHeight;
+      let xPos = xtop + 5 + i * bar_width+1;
+
+      let barHeight2 = light[i] / ((longest-0)/graphheight);
+      let yPos2 = yPos - barHeight2;
+      let xPos2 = xtop + 5 + i * bar_width+1;
+
+      let barHeight3 = rem[i] / ((longest-0)/graphheight);
+      let yPos3 = yPos2 - barHeight3;
+      let xPos3 = xtop + 5 + i * bar_width+1;
+
+      let barHeight4 = deep[i] / ((longest-0)/graphheight);
+      let yPos4 = yPos3 - barHeight4;
+      let xPos4 = xtop + 5 + i * bar_width+1;
+      
+      if(mouseX > xPos && mouseX < xPos+bar_width && mouseY > yPos && mouseY < yPos+barHeight){
+        message = "Latency Sleep is "+(round(onset_latency[i]/3600,2)).toString()+"h on "+summary_date[i];
+        //console.log(message+"is message 1")
+    }
+    // fill(224,227,255);      
+    // stroke(224,227,255);      
+
+
+    
+      if(mouseX > xPos2 && mouseX < xPos2+bar_width && mouseY > yPos2 && mouseY < yPos2+barHeight2){
+        message = "Lightness Sleep is "+(round(light[i]/3600,2)).toString()+"h on "+summary_date[i];
+        //console.log(message+"is message 2")
+
+    }else{
+
+    }
+    // fill(165,164,201);
+    // stroke(165,164,201);
+
+     
+      if(mouseX > xPos3 && mouseX < xPos3+bar_width && mouseY > yPos3 && mouseY < yPos3+barHeight3){
+        message = "REM Sleep is "+ (round(rem[i]/3600,2)).toString()+"h on "+summary_date[i];
+        //console.log(message+"is message 3")
+
+    }
+    // fill(29,27,119);
+    // stroke(29,27,119);
+
+     
+      if(mouseX > xPos4 && mouseX < xPos4+bar_width && mouseY > yPos4 && mouseY < yPos4+barHeight4){
+        message = "Deep Sleep is "+ (round(deep[i]/3600,2)).toString()+"h on "+summary_date[i];
+        console.log(message+"is message 4")
+
+    }
+
+
+    
+
+
+    // stroke(255);
+    // fill(255)
+  }
+  
+}
 
 function windowResized(){
   resizeCanvas(windowWidth, windowHeight);
