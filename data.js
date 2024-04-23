@@ -115,8 +115,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
       fileReader.readAsBinaryString(selectedFile);
 
       fileReader.onload = (event) => {
+
           let fileData = event.target.result;
-          
           let workbook = XLSX.read(fileData, { type: "binary" });
 
           if(selectedFile.name.includes("sleep")){
@@ -230,27 +230,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
           }else{
             return;
           }
-          
 
+          console.log(dataprocessed);
+          
+          if(dataprocessed.sleep && dataprocessed.activity && dataprocessed.weight){
+
+            setTimeout(() => {
+              var modal = document.getElementById("myModal");
+              modal.style.display = "none";
+            }, "200");
+            
+          }
           
       };
-
-      if(selectedFile.name.includes("sleep")){
-        dataprocessed.sleep = true;
-
-
-
-
-
-      }else if(selectedFile.name.includes("weight")){
-        dataprocessed.weight = true;
-      }else if(selectedFile.name.includes("activity")){
-        dataprocessed.activity = true;
-      }else{
-        return;
-      }
-
-      
 
       fileReader.onerror = (error) => {
           console.error('Error reading file:', error);
