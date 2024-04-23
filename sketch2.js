@@ -17,7 +17,7 @@ var summary_date = sleep.summary_date;
 var weight_lbs = weight.weight_lbs;
 var day_weight = weight.day_weight;
 
-let bar_width;
+ bar_width;
 let longest;
 let heaviest;
 let lightest;
@@ -159,27 +159,27 @@ let lightest;
 // });
 
 
-function checkDataProcessed() {
-  if (sleepDataProcessed && weightDataProcessed) {
-    console.log("Data is processed, initializing p5 sketch...");
-  } 
-  if (!sleepDataProcessed && !weightDataProcessed){
-    console.log("No data is being processed");
+// function checkDataProcessed() {
+//   if (sleepDataProcessed && weightDataProcessed) {
+//     console.log("Data is processed, initializing p5 sketch...");
+//   } 
+//   if (!sleepDataProcessed && !weightDataProcessed){
+//     console.log("No data is being processed");
 
-  }
-  if (!sleepDataProcessed && weightDataProcessed){
-    console.log("Only Weight data is being processed");
+//   }
+//   if (!sleepDataProcessed && weightDataProcessed){
+//     console.log("Only Weight data is being processed");
 
-  }
-}
+//   }
+// }
 
 
 let duration;
 duration = "total";
 let latency_height;
 
-let xtop = 65;
-let ytop = 65;
+let xtop = 50;
+let ytop = 40;
 let xbottom;
 let ybottom;
 let graphheight;
@@ -192,13 +192,20 @@ function setup(){
   let divHeight = document.getElementById('graph-section').clientHeight;
   console.log(divWidth + ", " + divHeight);
 
+ 
+
   var canvas = createCanvas(divWidth, divHeight);
   canvas.parent("sleep-graph");
+  
   console.log("Setup complete, summary_date.length:", summary_date.length);
   //noLoop();
   xbottom = divWidth-xtop;
   ybottom = divHeight-ytop;
   graphheight = ybottom-ytop;
+
+  console.log (xbottom + "is xbottom")
+  console.log (ybottom + "is ybottom")
+
   
   // if (summary_date.length>0){
   //   if (duration === "total"){
@@ -213,13 +220,13 @@ function setup(){
 
 
 function draw(){
-  // console.log(sleep)
   divWidth = document.getElementById('sleep-graph').clientWidth;
   divHeight = document.getElementById('sleep-graph').clientHeight;
-  console.log(divWidth + ", " + divHeight);
+  // console.log(sleep)
+  //console.log(divWidth + ", " + divHeight);
 
   xbottom = divWidth-xtop;
-  ybottom = divHeight-ytop;
+  ybottom = divHeight-ytop+50;
   graphheight = ybottom-ytop;
   
   var light = sleep.light;
@@ -253,7 +260,7 @@ function draw(){
                     console.log(lightest + "is lightest");
                   }
                 }
-  console.log("Draw function is running."); // Check how often this logs
+  //console.log("Draw function is running."); // Check how often this logs
 
     //x index
     fill(255);
@@ -303,7 +310,7 @@ function draw(){
       let yPos = ybottom - barHeight;
       let xPos = xtop + 5 + i * bar_width+1;
       rect(xPos, yPos, bar_width, barHeight);
-      console.log(`Drawing latency at index ${i}: xPos=${xPos}, yPos=${yPos}, bar_width=${bar_width}, height=${barHeight}`);
+      //console.log(`Drawing latency at index ${i}: xPos=${xPos}, yPos=${yPos}, bar_width=${bar_width}, height=${barHeight}`);
 
       fill(224,227,255);      
       let barHeight2 = light[i] / ((longest-0)/graphheight);
@@ -341,7 +348,7 @@ function draw(){
       let weight_y2 = (-(weight_lbs[i+1]-lightest)/(heaviest-lightest))*graphheight+ybottom;
       //console.log(weight_y1, weight_y2)
       line(weight_x1,weight_y1, weight_x2, weight_y2);
-      console.log(`Drawing line at index ${i}: xPos=${weight_x1}, yPos=${weight_y1}, xPos2=${weight_x2}, height=${weight_y2}`);
+      //console.log(`Drawing line at index ${i}: xPos=${weight_x1}, yPos=${weight_y1}, xPos2=${weight_x2}, height=${weight_y2}`);
 
       // noLoop();
     }

@@ -3,6 +3,7 @@ let sleepDataProcessed = false;
 let activityDataProcessed = false;
 let xPositions = [];
 let bar_width = 14.75;
+ 
 
 // Get the selected file when input changes
 document.getElementById("sleepFile").addEventListener("change", (event) => {
@@ -21,6 +22,11 @@ var day_steps = [];
 
 var earliest = Infinity; 
 var latest = 0;
+
+var minsteps = Infinity;
+var maxsteps = 0;
+//var high_efficiency;
+//var low_efficiency;
 
 // Handle upload button click
 document.getElementById("upload-button").addEventListener("click", (e) => {
@@ -71,7 +77,10 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
     console.log(latestTimeStamp);
     var earliestTimeStamp = Math.min(...dateTimestamps);
     console.log(earliestTimeStamp);
-     
+    
+    //var highestEfficiency = Math.max(...numberEfficiency);
+    //var lowestEfficiency = Math.min(...numberEfficiency);
+
     xPositions = dateTimestamps.map(timestamp => map(timestamp, earliestTimeStamp, latestTimeStamp, 65, 865));
     /*  latest = 0;
         earliest = Infinity;
@@ -147,8 +156,20 @@ let activityFile;
         activityDataProcessed = true;
         console.log("activityDataProcessed =" + activityDataProcessed);
         checkDataProcessed()
-
-      }
+        minsteps = Infinity;
+        maxsteps = 0;
+        for (var i = 0; i < steps.length; i++) {
+          var t = float(steps[i]);
+          if (t>maxsteps){
+            maxsteps = t;
+            console.log(maxsteps + "is maxsteps");
+          }
+          if (t<minsteps){
+            minsteps = t;
+            console.log(minsteps + "is minsteps");
+          }
+         }
+        }
             
          
         });
@@ -183,90 +204,105 @@ function setup(){
 //console.log("Efficiency array", efficiency);
 
 
+xtop = 65;
+ytop = 65;
+xbottom;
+ybottom;
+graphheight;
+divWidth;
+divHeight;
 
 
+function draw() {
+  background(255); // Clear the canvas each frame
 
-function draw(){
-  console.log("Draw function is running."); // Check how often this logs
-
-  stroke(0);
-  fill(0);//figure out how to unbold here, the dates axis is here
-
-  console.log("Efficiency array", efficiency);
-  console.log("Summary array:", summarydate);
-  
-
-textAlign(LEFT, CENTER);
-
-for (var i = 0; i < summarydate.length; i++){
-  if (i%2==0){
-    push();
-    translate(65 + i*bar_width, 512);
-    rotate(HALF_PI/2); // default is radiants
-    text(summarydate[i],0,0);
-    console.log(summarydate[i]);
-    pop(); // go back to the original codition so we can isolate different things)
-
+  // Draw y-axis labels for efficiency
+  textAlign(RIGHT, CENTER);
+  for (let i = 0; i <= 100; i += 10) {
+    let y = map(i, 0, 100, 508, 65);
+    text(i, 60, y);
   }
+
+  // Draw x-axis labels for dates
+  textAlign(LEFT, CENTER);
+  for (let i = 0; i < summarydate.length; i++) {
+    if (i % 2 == 0) {
+      push();
+      translate(65 + i * bar_width, 512);
+      rotate(HALF_PI / 2);
+      text(summarydate[i], 0, 0);
+      pop();
+    }
+  }
+
+  // Draw y-axis labels for steps
+  textAlign(LEFT, CENTER);
+  let maxStepValue = Math.ceil(maxsteps/1000) * 1000;
+  for (let stepValue = 0; stepValue <= maxStepValue; stepValue += 1000) {
+    let y = map(stepValue, 0, maxStepValue, 508, 65); // Corrected the variable name here
+    text(stepValue, 870, y);
 }
 
-/*for (var i = 0; i < summarydate.length; i++) {
-  var linex = xPositions[i];
-  var liney = map(efficiency[i], 0, 100, height, 0);
-  line(px, py, linex, liney);
-}*/
 
-//line graph, connecting the dots
-stroke(0, 0, 255);
-for (let i=0; i < summarydate.length; i++) {
-  let x1 = xPositions[i];
-  let y1 = map(efficiency[i], 0, 100, height, 0);
-  let x2 = xPositions[i + 1];
-  let y2 = map(efficiency[i + 1], 0, 100, height, 0);
-  line(x1, y1, x2, y2);
-}
+  // Draw line graph for efficiency data
+  stroke(0, 0, 255);
+  for (let i = 0; i < summarydate.length - 1; i++) {
+    let x1 = xPositions[i];
+    //let y1 = map(efficiency[i], 0, 100, height, 0);
+    let y1 = -efficiency[i]/100*508+508;
+    let x2 = xPositions[i + 1];
+    let y2 = -efficiency[i+1]/100*508+508;
+    line(x1, y1, x2, y2);
+  }
 
-for (var i = 0; i < summarydate.length; i++){
+  // Draw circles for efficiency data
+  for (let i = 0; i < summarydate.length; i++) {
+    stroke(0);
+    fill(255, 255, 255);
+
+    let xpos = xPositions[i];
+    let ypos = map(efficiency[i], 0, 100, height, 0);
+    circle(xpos, ypos, 4);
+    console.log(`Drawing summary date at index ${i}: xpos=${xpos}, ypos=${ypos}`);
+  }
+
+  // Draw line graph for steps data
+  stroke(255, 0, 0); // Set color to red for steps data
+  for (let i = 0; i < day_steps.length - 1; i++) {
+    let steps_x1 = xPositions[i];
+    let steps_y1 = -steps[i]/maxStepValue*508+508
+    //let steps_y1 = map(steps[i], 0, maxsteps, height, 0);//map from height to 0
+    //let steps_y2 = map(steps[i + 1], 0, maxsteps, height, 0);//map from height to 0
+    let steps_y2 = -steps[i+1]/maxStepValue*508+508
+    let steps_x2 = xPositions[i + 1];
+
+    line(steps_x1, steps_y1, steps_x2, steps_y2);
+  }
+
+  //Draw circles for steps data
+  for (let i = 0; i < day_steps.length; i++) {
+    stroke(0);
+    fill(255, 255, 255);
+
+    let stc_xpos = xPositions[i];
+    let stc_ypos = map(steps[i], 0, maxsteps, 0, 500);
+    circle(stc_xpos, stc_ypos, 4);
+
+  // Draw x and y axis lines and labels
   stroke(0);
-  fill(255, 255, 255);
-
-  
-  var xpos = xPositions[i];
-  var ypos = map(efficiency[i], 0, 100, height, 0);
-  circle(xpos, ypos, 4);
-  console.log(`Drawing summary date at index ${i}: xpos=${xpos}, ypos=${ypos}`);
-
-  noLoop();
+  fill(0);
+  line(65, 508, 865, 508); // x-axis
+  line(65, 50, 65, 508); // y-axis
+  line(865, 50, 865, 508); // right border
+  stroke(255);
+  textAlign(CENTER, CENTER);
+  text("Efficiency", 65, 45); // y-axis label
+  textAlign(LEFT, CENTER);
+  text("Date", 875, 508); // x-axis label
+  textAlign(CENTER, CENTER);
+  text("Steps", 865, 45); // right border label
 }
 
-
-
-
-
-  stroke(0);
-
-    fill(0);
-
-    line(65,508,865,508);
-    //y index
-    line(65,50,65,508);
-    stroke(255);
-
-    textAlign(CENTER, CENTER);
-    text("Efficiency", 65, 45);
-
-    textAlign(LEFT, CENTER);
-    text("Date", 875, 508);
-
-  /*line(0, height/2, width, height/2);
-  line(width/2, 0, width/2, height);
-  textAlign(CENTER, CENTER);*/
-
-
-//find the range highest data point
-//unit on y axis
-
-}
 
 function windowResized(){
   resizeCanvas(windowWidth, windowHeight);
@@ -288,3 +324,4 @@ let sleep= {
   efficiency:[]
 }
 */
+}
