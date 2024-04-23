@@ -206,9 +206,9 @@ function setup(){
 
 xtop = 65;
 ytop = 65;
-xbottom;
-ybottom;
-graphheight;
+xbottom = 865;
+ybottom = 508;
+ graphheight = ybottom-ytop;
 divWidth;
 divHeight;
 
@@ -216,11 +216,12 @@ divHeight;
 function draw() {
   background(255); // Clear the canvas each frame
 
+  strokeWeight(1);
   // Draw y-axis labels for efficiency
   textAlign(RIGHT, CENTER);
   for (let i = 0; i <= 100; i += 10) {
-    let y = map(i, 0, 100, 508, 65);
-    text(i, 60, y);
+    let y = map(i, 0, 100, ybottom, xtop);
+    text(i+" -", xtop, y);
   }
 
   // Draw x-axis labels for dates
@@ -237,15 +238,23 @@ function draw() {
 
   // Draw y-axis labels for steps
   textAlign(LEFT, CENTER);
-  let maxStepValue = Math.ceil(maxsteps/1000) * 1000;
-  for (let stepValue = 0; stepValue <= maxStepValue; stepValue += 1000) {
-    let y = map(stepValue, 0, maxStepValue, 508, 65); // Corrected the variable name here
-    text(stepValue, 870, y);
+  let maxStepValue = 0;
+  for(var i = 0; i <= steps.length; i++){
+    var t = float(steps[i]);
+    if (t>maxStepValue){
+      maxStepValue = t;
+      //console.log(heaviest + "is heaviest");
+    }  }
+    
+    for (let i = 0; i <= maxStepValue; i += 1000) {
+    let y = map(i, 0, maxStepValue, ybottom, ytop); // Corrected the variable name here
+    text("- "+i, xbottom, y);
 }
 
 
   // Draw line graph for efficiency data
-  stroke(0, 0, 255);
+  stroke(224,227,255);    
+  strokeWeight(3);
   for (let i = 0; i < summarydate.length - 1; i++) {
     let x1 = xPositions[i];
     //let y1 = map(efficiency[i], 0, 100, height, 0);
@@ -258,22 +267,23 @@ function draw() {
   // Draw circles for efficiency data
   for (let i = 0; i < summarydate.length; i++) {
     stroke(0);
-    fill(255, 255, 255);
+    fill(224,227,255);    
 
     let xpos = xPositions[i];
-    let ypos = map(efficiency[i], 0, 100, height, 0);
+    let ypos =  -efficiency[i]/100*ybottom+ybottom;
     circle(xpos, ypos, 4);
     console.log(`Drawing summary date at index ${i}: xpos=${xpos}, ypos=${ypos}`);
   }
 
   // Draw line graph for steps data
-  stroke(255, 0, 0); // Set color to red for steps data
+  stroke(29,27,119); // Set color to red for steps data
+  
   for (let i = 0; i < day_steps.length - 1; i++) {
     let steps_x1 = xPositions[i];
-    let steps_y1 = -steps[i]/maxStepValue*508+508
+    let steps_y1 = -steps[i]/maxStepValue*graphheight+ybottom
     //let steps_y1 = map(steps[i], 0, maxsteps, height, 0);//map from height to 0
     //let steps_y2 = map(steps[i + 1], 0, maxsteps, height, 0);//map from height to 0
-    let steps_y2 = -steps[i+1]/maxStepValue*508+508
+    let steps_y2 = -steps[i+1]/maxStepValue*graphheight+ybottom
     let steps_x2 = xPositions[i + 1];
 
     line(steps_x1, steps_y1, steps_x2, steps_y2);
@@ -282,25 +292,26 @@ function draw() {
   //Draw circles for steps data
   for (let i = 0; i < day_steps.length; i++) {
     stroke(0);
-    fill(255, 255, 255);
+    fill(29,27,119);
 
     let stc_xpos = xPositions[i];
-    let stc_ypos = map(steps[i], 0, maxsteps, 0, 500);
+    let stc_ypos = -steps[i]/maxStepValue*graphheight+ybottom
     circle(stc_xpos, stc_ypos, 4);
 
   // Draw x and y axis lines and labels
   stroke(0);
+  strokeWeight(1);
   fill(0);
-  line(65, 508, 865, 508); // x-axis
-  line(65, 50, 65, 508); // y-axis
-  line(865, 50, 865, 508); // right border
+  line(xtop, ybottom, 865, ybottom); // x-axis
+  line(xtop, ytop, xtop, ybottom); // y-axis
+  line(xbottom, ytop-10, xbottom, ybottom); // right border
   stroke(255);
   textAlign(CENTER, CENTER);
-  text("Efficiency", 65, 45); // y-axis label
+  text("Efficiency", xtop, ytop-20); // y-axis label
   textAlign(LEFT, CENTER);
-  text("Date", 875, 508); // x-axis label
+  //text("Date", xbottom, ybottom); // x-axis label
   textAlign(CENTER, CENTER);
-  text("Steps", 865, 45); // right border label
+  text("Steps", xbottom, ytop-20); // right border label
 }
 
 

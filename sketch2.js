@@ -197,14 +197,12 @@ function setup(){
   var canvas = createCanvas(divWidth, divHeight);
   canvas.parent("sleep-graph");
   
-  console.log("Setup complete, summary_date.length:", summary_date.length);
+  //console.log("Setup complete, summary_date.length:", summary_date.length);
   //noLoop();
-  xbottom = divWidth-xtop;
-  ybottom = divHeight-ytop;
-  graphheight = ybottom-ytop;
+  // xbottom = divWidth-xtop;
+  // ybottom = divHeight-ytop;
+  // graphheight = ybottom-ytop;
 
-  console.log (xbottom + "is xbottom")
-  console.log (ybottom + "is ybottom")
 
   
   // if (summary_date.length>0){
