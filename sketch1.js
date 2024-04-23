@@ -1,6 +1,11 @@
 let sleepFile;
+let activityFile;
+let weightFile;
+let readinessFile;
 let sleepDataProcessed = false;
 let activityDataProcessed = false;
+let weightDataProcess = false;
+let readinessDataProcess = false;
 let xPositions = [];
 let bar_width = 14.75;
 
@@ -9,16 +14,40 @@ document.getElementById("sleepFile").addEventListener("change", (event) => {
   sleepFile = event.target.files[0]; // selecting the file
 });
 
+document.getElementById("activityFile").addEventListener("change", (event) => {
+  activityFile = event.target.files[0]; // selecting the file
+});
+
+document.getElementById("weightFile").addEventListener("change", (event) => {
+  weightFile = event.target.files[0]; // selecting the file
+});
+
+document.getElementById("readinessFile").addEventListener("change", (event) => {
+  readinessFile = event.target.files[0]; // selecting the file
+});
+
+// set up arrays to be populated
 var sleepscore = [];
 var sleepsummarydate = [];
 
 var activityscore = [];
 var activitysummarydate = [];
 
+var weightscore = [];
+var weightsummarydate = [];
+let normalizedWeightScores = [];
+
+var readinessscore = [];
+var readinesssummarydate = [];
+let normalizedreadinessScores = [];
+
+
+
 var earliest = Infinity;
 var latest = 0;
 
-// Handle upload button click
+//sleep
+
 document.getElementById("upload-button").addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -81,10 +110,7 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
   };
 });
 
-let activityFile;
-document.getElementById("activityFile").addEventListener("change", (event) => {
-  activityFile = event.target.files[0]; // selecting the file
-});
+//activity
 
 document.getElementById("upload-button").addEventListener("click", (e) => {
   e.preventDefault();
@@ -122,12 +148,120 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
           map(score, minActivityScore, maxActivityScore, 0, 1)
         );
 
-        activityDataProcessed = true;
+        weightDataProcessed = true;
         checkDataProcessed();
       }
     });
   };
 });
+
+
+
+//weight
+
+document.getElementById("upload-button").addEventListener("click", (e) => {
+  e.preventDefault();
+  let fileReader2 = new FileReader();
+
+  // Read the selected file as binary string
+  fileReader2.readAsBinaryString(weightFile);
+
+  // Process the file data when it's loaded
+  fileReader2.onload = (event) => {
+    let fileData2 = event.target.result;
+
+    // Read the Excel workbook
+    let workbook = XLSX.read(
+      fileData2,
+      { type: "binary" },
+      { dateNF: "mm/dd/yyyy" }
+    );
+
+    // Change each sheet in the workbook to json
+    workbook.SheetNames.forEach(async (sheet) => {
+      const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+        raw: false,
+      });
+
+      if (weightFile) {
+        for (var i = 0; i < result2.length; i++) {
+          // Parse the weight value as an integer
+          let weight = parseInt(result2[i].weight_lbs);
+          weightscore.push(weight);
+          weightsummarydate.push(result2[i].day);
+        }
+
+        // Calculate the minimum and maximum values of the weight scores
+        let minWeightScore = Math.min(...weightscore);
+        let maxWeightScore = Math.max(...weightscore);
+
+        // Normalize the weight score data from 0 to 1 and assign to normalizedWeightScores
+        normalizedWeightScores = weightscore.map(
+          (score) =>
+            (score - minWeightScore) / (maxWeightScore - minWeightScore)
+        );
+
+        weightDataProcessed = true;
+        checkDataProcessed();
+      }
+    });
+  };
+});
+
+
+
+
+//readiness
+
+document.getElementById("upload-button").addEventListener("click", (e) => {
+  e.preventDefault();
+  let fileReader2 = new FileReader();
+
+  // Read the selected file as binary string
+  fileReader2.readAsBinaryString(readinessFile);
+
+  // Process the file data when it's loaded
+  fileReader2.onload = (event) => {
+    let fileData2 = event.target.result;
+
+    // Read the Excel workbook
+    let workbook = XLSX.read(
+      fileData2,
+      { type: "binary" },
+      { dateNF: "mm/dd/yyyy" }
+    );
+
+    // Change each sheet in the workbook to json
+    workbook.SheetNames.forEach(async (sheet) => {
+      const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+        raw: false,
+      });
+
+      if (readinessFile) {
+        for (var i = 0; i < result2.length; i++) {
+          // Parse the weight value as an integer
+          let readiness = parseInt(result2[i].score);
+          readinessscore.push(readiness);
+          readinesssummarydate.push(result2[i].day);
+        }
+
+        // Calculate the minimum and maximum values of the weight scores
+        let minReadinessScore = Math.min(...readinessscore);
+        let maxReadinessScore = Math.max(...readinessscore);
+
+        // Normalize the weight score data from 0 to 1 and assign to normalizedWeightScores
+        normalizedReadinessScores = readinessscore.map(
+          (score) =>
+            (score - minReadinessScore) / (maxReadinessScore - minReadinessScore)
+        );
+
+        ReadinessDataProcessed = true;
+        checkDataProcessed();
+      }
+    });
+  };
+});
+
 
 function checkDataProcessed() {
   if (sleepDataProcessed && activityDataProcessed) {
@@ -137,7 +271,6 @@ function checkDataProcessed() {
   if (!sleepDataProcessed && activityDataProcessed) {
   }
 }
-
 
 function setup() {
   var canvas = createCanvas(windowWidth, windowHeight);
@@ -190,6 +323,27 @@ function draw() {
     line(x1, y1, x2, y2);
   }
 
+  // Draw lines connecting weight score data points
+  stroke(0, 255, 0); // Change color to green
+  for (let i = 0; i < weightsummarydate.length - 1; i++) {
+    let x1 = xPositions[i];
+    let y1 = map(normalizedWeightScores[i], 0, 1, height - 50, 50);
+    let x2 = xPositions[i + 1];
+    let y2 = map(normalizedWeightScores[i + 1], 0, 1, height - 50, 50);
+    line(x1, y1, x2, y2);
+  }
+
+  // Draw lines connecting readiness score data points
+  stroke(160, 32, 240); // Change color to purple
+  for (let i = 0; i < readinesssummarydate.length - 1; i++) {
+    let x1 = xPositions[i];
+    let y1 = map(normalizedReadinessScores[i], 0, 1, height - 50, 50);
+    let x2 = xPositions[i + 1];
+    let y2 = map(normalizedReadinessScores[i + 1], 0, 1, height - 50, 50);
+    line(x1, y1, x2, y2);
+  }
+
+
   // Draw circles at each sleep score data point
   for (var i = 0; i < sleepsummarydate.length; i++) {
     stroke(0);
@@ -201,15 +355,34 @@ function draw() {
   }
 
   // Draw circles at each activity score data point
-for (var i = 0; i < activitysummarydate.length; i++) {
-  stroke(0); // Set stroke color to red
-  fill(255, 255, 255); // Set fill color to white
+  for (var i = 0; i < activitysummarydate.length; i++) {
+    stroke(0);
+    fill(255, 255, 255); // Set fill color to white
 
-  var xpos = xPositions[i];
-  var ypos = map(activityscore[i], 0, 100, height - 50, 50);
-  circle(xpos, ypos, 4); // Draw a circle at the activity score data point
-}
+    var xpos = xPositions[i];
+    var ypos = map(activityscore[i], 0, 100, height - 50, 50);
+    circle(xpos, ypos, 4); // Draw a circle at the activity score data point
+  }
 
+  // Draw circles at each weight score data point
+  for (var i = 0; i < weightsummarydate.length; i++) {
+    stroke(0);
+    fill(255, 255, 255); // Set fill color to white
+
+    var xpos = xPositions[i];
+    var ypos = map(normalizedWeightScores[i], 0, 1, height - 50, 50);
+    circle(xpos, ypos, 4); // Draw a circle at the normalized weight score data point
+  }
+
+   // Draw circles at each readiness score data point
+   for (var i = 0; i < readinesssummarydate.length; i++) {
+    stroke(0);
+    fill(255, 255, 255); // Set fill color to white
+
+    var xpos = xPositions[i];
+    var ypos = map(normalizedReadinessScores[i], 0, 1, height - 50, 50);
+    circle(xpos, ypos, 4); // Draw a circle at the normalized readiness score data point
+  }
 
   // Draw axes
   stroke(0);
