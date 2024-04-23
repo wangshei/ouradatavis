@@ -289,7 +289,7 @@ function draw() {
 
 
   // Draw line graph for efficiency data
-  stroke(224,227,255);    
+  stroke(67,1,89);    
   strokeWeight(3);
   for (let i = 0; i < summarydate.length - 1; i++) {
     let x1 = xPositions[i];
@@ -312,7 +312,7 @@ function draw() {
   }
 
   // Draw line graph for steps data
-  stroke(29,27,119); // Set color to red for steps data
+  stroke(255,226,237); // Set color to red for steps data
   
   for (let i = 0; i < day_steps.length - 1; i++) {
     let steps_x1 = xPositions[i];
