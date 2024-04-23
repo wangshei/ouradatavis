@@ -216,7 +216,7 @@ for (var i = 0; i < summarydate.length; i++){
   line(px, py, linex, liney);
 }*/
 
-//line graph attempt
+//line graph, connecting the dots
 stroke(0, 0, 255);
 for (let i=0; i < summarydate.length; i++) {
   let x1 = xPositions[i];
