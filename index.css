@@ -68,6 +68,8 @@ h1{
 
 }
 
+
+
 .key{
     display: inline-flex;
     padding: 4px 12px;
@@ -255,6 +257,15 @@ p{
     line-height: normal;
 }
 
+#insights-section p{
+    font-size:15px;
+    font-style:normal;
+    font-weight:400px;
+    line-height:100%;
+    margin: 10px 0;
+    color:black;
+
+}
 
 .insights-content{
     display: flex;
