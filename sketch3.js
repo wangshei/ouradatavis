@@ -96,11 +96,11 @@ function draw(){
                   var t = float(weight_lbs[i]);
                   if (t>heaviest){
                     heaviest = t;
-                    console.log(heaviest + "is heaviest");
+                    //console.log(heaviest + "is heaviest");
                   }
                   if (t<lightest){
                     lightest = t;
-                    console.log(lightest + "is lightest");
+                    //console.log(lightest + "is lightest");
                   }
                 }
   
@@ -121,7 +121,7 @@ function draw(){
 
       if (t>most_cal){
         most_cal = t;
-        console.log(most_cal + "is most_cal");
+        //console.log(most_cal + "is most_cal");
       }
     }
     //x index
@@ -175,9 +175,9 @@ function draw(){
       // console.log(heaviest + " is the heaviest")
       // console.log(graphheight + " is graphheight")
       // console.log(ybottom + "is ybottom")
-      console.log(cal_active[i]+ "is cal active")
-      console.log(graphheight + "is graphheight")
-      console.log(ybottom + "is ybottom")
+      // console.log(cal_active[i]+ "is cal active")
+      // console.log(graphheight + "is graphheight")
+      // console.log(ybottom + "is ybottom")
       
        calories_y1 = (-(cal_active[i])/(most_cal))*graphheight+ybottom;
        calories_x2 = xtop + 5+ bar_width*[i+1];

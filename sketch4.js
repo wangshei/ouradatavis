@@ -204,7 +204,13 @@ function setup(){
 //console.log("Efficiency array", efficiency);
 
 
-
+xtop = 65;
+ytop = 65;
+xbottom;
+ybottom;
+graphheight;
+divWidth;
+divHeight;
 
 
 function draw() {
@@ -230,7 +236,7 @@ function draw() {
   }
 
   // Draw y-axis labels for steps
-  textAlign(RIGHT, CENTER);
+  textAlign(LEFT, CENTER);
   let maxStepValue = Math.ceil(maxsteps/1000) * 1000;
   for (let stepValue = 0; stepValue <= maxStepValue; stepValue += 1000) {
     let y = map(stepValue, 0, maxStepValue, 508, 65); // Corrected the variable name here

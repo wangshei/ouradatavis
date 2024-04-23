@@ -17,7 +17,7 @@ var summary_date = sleep.summary_date;
 var weight_lbs = weight.weight_lbs;
 var day_weight = weight.day_weight;
 
-let bar_width;
+ bar_width;
 let longest;
 let heaviest;
 let lightest;
@@ -188,12 +188,15 @@ let divHeight;
 
 
 function setup(){
-  let divWidth = document.getElementById('graph-section').clientWidth;
-  let divHeight = document.getElementById('graph-section').clientHeight;
+   divWidth = document.getElementById('graph-section').clientWidth;
+   divHeight = document.getElementById('graph-section').clientHeight;
   //console.log(divWidth + ", " + divHeight);
+
+ 
 
   var canvas = createCanvas(divWidth, divHeight);
   canvas.parent("sleep-graph");
+  
   //console.log("Setup complete, summary_date.length:", summary_date.length);
   //noLoop();
   xbottom = divWidth-xtop;
@@ -213,9 +216,9 @@ function setup(){
 
 
 function draw(){
+  divWidth = document.getElementById('sleep-insights').clientWidth;
+  divHeight = document.getElementById('sleep-insights').clientHeight;
   // console.log(sleep)
-  divWidth = document.getElementById('sleep-graph').clientWidth;
-  divHeight = document.getElementById('sleep-graph').clientHeight;
   //console.log(divWidth + ", " + divHeight);
 
   xbottom = divWidth-xtop;
