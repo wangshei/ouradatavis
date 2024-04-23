@@ -83,9 +83,21 @@
             
           </div>
           <div class="tile" id="insights-section">
-            <div id="movement-insights" class="insights">
+            <div id="overview-insights" class="insights">
               <div class="title">Insights</div>
               <div class="insights-content" id="overview-insights-content"></div>
+            </div>
+            <div id="sleep-insights" class="insights">
+              <div class="title">Insights</div>
+              <div class="insights-content" id="sleep-insights-content"></div>
+            </div>
+            <div id="activity-insights" class="insights">
+              <div class="title">Insights</div>
+              <div class="insights-content" id="activity-insights-content"></div>
+            </div>
+            <div id="weight-insights" class="insights">
+              <div class="title">Insights</div>
+              <div class="insights-content" id="weight-insights-content"></div>
             </div>
           </div>
         </div>
@@ -161,6 +173,60 @@
     </div>
 
     <script defer>
+
+      
+const tabs = document.querySelectorAll(".tab");
+      
+      const overviewInsights = document.getElementById("overview-insights");
+      const sleepInsights = document.getElementById("sleep-insights");
+      const activityInsights = document.getElementById("activity-insights");
+      const weightInsights = document.getElementById("weight-insights");
+
+      
+
+      
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+
+          tabs.forEach((t) => t.removeAttribute("id"));
+          tab.setAttribute("id", "selected");
+
+          if (tab.innerHTML === "Overview") {
+            
+            overviewInsights.style.display = "block";
+            sleepInsights.style.display = "none";
+            activityInsights.style.display = "none";
+            weightInsights.style.display = "none";
+
+
+          } else if (tab.innerHTML === "Sleep") {
+            
+            overviewInsights.style.display = "none";
+            sleepInsights.style.display = "block";
+            activityInsights.style.display = "none";
+            weightInsights.style.display = "none";
+
+          } else if (tab.innerHTML === "Activity") {
+            
+            overviewInsights.style.display = "none";
+            sleepInsights.style.display = "none";
+            activityInsights.style.display = "block";
+            weightInsights.style.display = "none";
+
+
+          }else if(tab.innerHTML === "Movement") {
+
+
+            overviewInsights.style.display = "none";
+            sleepInsights.style.display = "none";
+            activityInsights.style.display = "none";
+            weightInsights.style.display = "block";
+          }
+          
+
+        });
+      });
       document.addEventListener("DOMContentLoaded", function () {
         // Hide the modal when the page loads
         closeModal();

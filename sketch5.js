@@ -46,26 +46,26 @@ var latest = 0;
 
 // Function to filter data by the first month
 function filterDataByFirstMonth(summaryDates, scores) {
-    // Get the date of the first entry
-    const firstDate = new Date(summaryDates[0]);
-    // Get the month of the first entry
-    const firstMonth = firstDate.getMonth();
-    
-    // Filter out data entries that belong to the first month
-    const filteredSummaryDates = [];
-    const filteredScores = [];
-    for (let i = 0; i < summaryDates.length; i++) {
-        const currentDate = new Date(summaryDates[i]);
-        if (currentDate.getMonth() === firstMonth) {
-            filteredSummaryDates.push(summaryDates[i]);
-            filteredScores.push(scores[i]);
-        } else {
-            // Stop once data entries from the next month are encountered
-            break;
-        }
+  // Get the date of the first entry
+  const firstDate = new Date(summaryDates[0]);
+  // Get the month of the first entry
+  const firstMonth = firstDate.getMonth();
+
+  // Filter out data entries that belong to the first month
+  const filteredSummaryDates = [];
+  const filteredScores = [];
+  for (let i = 0; i < summaryDates.length; i++) {
+    const currentDate = new Date(summaryDates[i]);
+    if (currentDate.getMonth() === firstMonth) {
+      filteredSummaryDates.push(summaryDates[i]);
+      filteredScores.push(scores[i]);
+    } else {
+      // Stop once data entries from the next month are encountered
+      break;
     }
-    
-    return { filteredSummaryDates, filteredScores };
+  }
+
+  return { filteredSummaryDates, filteredScores };
 }
 
 //sleep
@@ -107,7 +107,10 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
         );
 
         // Filter sleep data by the first month
-        const { filteredSummaryDates, filteredScores } = filterDataByFirstMonth(sleepsummarydate, sleepscore);
+        const { filteredSummaryDates, filteredScores } = filterDataByFirstMonth(
+          sleepsummarydate,
+          sleepscore
+        );
 
         // Create dateTimestamps array
         var dateTimestamps = filteredSummaryDates.map((dateString) => {
@@ -172,7 +175,10 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
         );
 
         // Filter activity data by the first month
-        const { filteredSummaryDates, filteredScores } = filterDataByFirstMonth(activitysummarydate, activityscore);
+        const { filteredSummaryDates, filteredScores } = filterDataByFirstMonth(
+          activitysummarydate,
+          activityscore
+        );
 
         activityDataProcessed = true;
         checkDataProcessed();
@@ -231,7 +237,6 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
   };
 });
 
-//readiness
 document.getElementById("upload-button").addEventListener("click", (e) => {
   e.preventDefault();
   let fileReader2 = new FileReader();
@@ -268,13 +273,14 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
         let minReadinessScore = Math.min(...readinessscore);
         let maxReadinessScore = Math.max(...readinessscore);
 
-        // Normalize the readiness score data from 0 to 1 and assign to normalizedReadinessScores
+        // Normalize the weight score data from 0 to 1 and assign to normalizedWeightScores
         normalizedReadinessScores = readinessscore.map(
           (score) =>
-            (score - minReadinessScore) / (maxReadinessScore - minReadinessScore)
+            (score - minReadinessScore) /
+            (maxReadinessScore - minReadinessScore)
         );
 
-        readinessDataProcessed = true;
+        ReadinessDataProcessed = true;
         checkDataProcessed();
       }
     });
@@ -282,8 +288,11 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
 });
 
 function checkDataProcessed() {
-  if (sleepDataProcessed && activityDataProcessed && weightDataProcessed && readinessDataProcessed) {
-    redraw(); // Redraw the canvas once all data is processed
+  if (sleepDataProcessed && activityDataProcessed) {
+  }
+  if (!sleepDataProcessed && !activityDataProcessed) {
+  }
+  if (!sleepDataProcessed && activityDataProcessed) {
   }
 }
 
@@ -293,143 +302,134 @@ function setup() {
   frameRate(60);
 }
 
+xtop = 65;
+ytop = 65;
+xbottom = 865;
+ybottom = 508;
+graphheight = ybottom - ytop;
+divWidth;
+divHeight;
+
 function draw() {
-    if (!sleepDataProcessed || !activityDataProcessed || !weightDataProcessed || !readinessDataProcessed) {
-      background(255);
-      textAlign(CENTER, CENTER);
-      textSize(20);
-      fill(0);
-      return; // Exit draw function until all data is processed
-    }
-  
-    // Once data is processed, draw the graph
-    background(255);
-    stroke(0);
-    fill(0);
-  
-    textAlign(LEFT, CENTER);
-  
-    // Draw hash marks and labels on the y-axis
-    for (let i = 0; i <= 10; i++) {
-      let y = map(i / 10, 0, 1, height - 50, 50); // Calculate y-coordinate for each hash mark
-      line(60, y, 65, y); // Draw the hash mark
-      textAlign(RIGHT, CENTER);
-      noStroke();
-      text(i / 10, 60, y); // Label the hash mark
-    }
-  
-    // Calculate spacing between date labels
-    let numLabels = 5; // Number of date labels to show
-    let labelSpacing = Math.ceil(sleepsummarydate.length / numLabels); // Calculate spacing between date labels
-  
-    // Draw date labels horizontally
-    textAlign(CENTER, CENTER);
-    for (let i = 0; i < sleepsummarydate.length; i += labelSpacing) {
-      let x = map(i, 0, sleepsummarydate.length - 1, 65, 865); // Calculate x-coordinate for each date label
-      let y = height - 30;
-      text(sleepsummarydate[i], x, y); // Display the date label
-    }
-  
-    // Draw lines connecting sleep score data points
-    strokeWeight(2); // Set the stroke weight to 2 pixels
+  noStroke();
+  stroke(0);
+  fill(0);
 
-    stroke(64, 119, 27);
-    for (let i = 0; i < sleepsummarydate.length - 1; i++) {
-      let x1 = xPositions[i];
-      let y1 = map(sleepscore[i], 0, 100, height - 50, 50);
-      let x2 = xPositions[i + 1];
-      let y2 = map(sleepscore[i + 1], 0, 100, height - 50, 50);
-      line(x1, y1, x2, y2);
-    }
-  
-    // Draw lines connecting activity score data points
-    strokeWeight(2); // Set the stroke weight to 2 pixels
+  bar_width = (xbottom - xtop) / activitysummarydate.length;
 
-    stroke(134, 77, 191); // Change color to red
-    for (let i = 0; i < activitysummarydate.length - 1; i++) {
-      let x1 = xPositions[i];
-      let y1 = map(activityscore[i], 0, 100, height - 50, 50);
-      let x2 = xPositions[i + 1];
-      let y2 = map(activityscore[i + 1], 0, 100, height - 50, 50);
-      line(x1, y1, x2, y2);
-    }
-  
-    // Draw lines connecting weight score data points
-    strokeWeight(2); // Set the stroke weight to 2 pixels
+  textAlign(LEFT, CENTER);
 
-    stroke(0, 164, 186); // Change color to green
-    for (let i = 0; i < weightsummarydate.length - 1; i++) {
-      let x1 = xPositions[i];
-      let y1 = map(normalizedWeightScores[i], 0, 1, height - 50, 50);
-      let x2 = xPositions[i + 1];
-      let y2 = map(normalizedWeightScores[i + 1], 0, 1, height - 50, 50);
-      line(x1, y1, x2, y2);
-    }
-  
-    // Draw lines connecting readiness score data points
-    strokeWeight(2); // Set the stroke weight to 2 pixels
-
-    stroke(211, 100, 100); // Change color to purple
-    for (let i = 0; i < readinesssummarydate.length - 1; i++) {
-      let x1 = xPositions[i];
-      let y1 = map(normalizedReadinessScores[i], 0, 1, height - 50, 50);
-      let x2 = xPositions[i + 1];
-      let y2 = map(normalizedReadinessScores[i + 1], 0, 1, height - 50, 50);
-      line(x1, y1, x2, y2);
-    }
-  
-    // Draw circles at each sleep score data point
-    for (var i = 0; i < sleepsummarydate.length; i++) {
-      stroke(0);
-      fill(255, 255, 255);
-  
-      var xpos = xPositions[i];
-      var ypos = map(sleepscore[i], 0, 100, height - 50, 50);
-      circle(xpos, ypos, 4);
-    }
-  
-    // Draw circles at each activity score data point
-    for (var i = 0; i < activitysummarydate.length; i++) {
-      stroke(0);
-      fill(255, 255, 255); // Set fill color to white
-  
-      var xpos = xPositions[i];
-      var ypos = map(activityscore[i], 0, 100, height - 50, 50);
-      circle(xpos, ypos, 4); // Draw a circle at the activity score data point
-    }
-  
-    // Draw circles at each weight score data point
-    for (var i = 0; i < weightsummarydate.length; i++) {
-      stroke(0);
-      fill(255, 255, 255); // Set fill color to white
-  
-      var xpos = xPositions[i];
-      var ypos = map(normalizedWeightScores[i], 0, 1, height - 50, 50);
-      circle(xpos, ypos, 4); // Draw a circle at the normalized weight score data point
-    }
-  
-    // Draw circles at each readiness score data point
-    for (var i = 0; i < readinesssummarydate.length; i++) {
-      stroke(0);
-      fill(255, 255, 255); // Set fill color to white
-  
-      var xpos = xPositions[i];
-      var ypos = map(normalizedReadinessScores[i], 0, 1, height - 50, 50);
-      circle(xpos, ypos, 4); // Draw a circle at the normalized readiness score data point
-    }
-  
-    // Draw axes
-    stroke(0);
-    fill(0);
-    line(65, 765, 865, 765); // x-axis
-    line(65, 50, 65, 765); // y-axis
-    noStroke(0);
-    textAlign(CENTER, CENTER);
-    text("score", 65, 20); // y-axis label
-    textAlign(LEFT, CENTER);
-    text("Date", 875, 765); // x-axis label
+  // Draw hash marks and labels on the y-axis
+  for (let i = 0; i <= 10; i++) {
+    let y = map(i / 10, 0, 1, graphheight, xtop - 15); // Calculate y-coordinate for each hash mark
+    line(60, y, 65, y); // Draw the hash mark
+    textAlign(RIGHT, CENTER);
+    noStroke();
+    text(i / 10, 60, y); // Label the hash mark
   }
-  
+
+  // Draw sleep summary dates
+  for (var i = 0; i < sleepsummarydate.length; i++) {
+    if (i % 2 == 0) {
+      push();
+      translate(65 + i * bar_width + bar_width / 2, ybottom);
+      rotate(HALF_PI / 2);
+      text(sleepsummarydate[i], 0, 0);
+      pop();
+    }
+  }
+
+  // Draw lines connecting sleep score data points
+  stroke(64, 119, 27);
+  for (let i = 0; i < sleepsummarydate.length - 1; i++) {
+    let x1 = xPositions[i];
+    let y1 = (-sleepscore[i] / 100) * ybottom + ybottom;
+    let x2 = xPositions[i + 1];
+    let y2 = (-sleepscore[i + 1] / 100) * ybottom + ybottom;
+    line(x1, y1, x2, y2);
+  }
+
+  // Draw lines connecting activity score data points
+  stroke(134, 77, 191); // Change color to red
+  for (let i = 0; i < activitysummarydate.length - 1; i++) {
+    let x1 = xPositions[i];
+    let y1 = (-activityscore[i] / 100) * ybottom + ybottom;
+    let x2 = xPositions[i + 1];
+    let y2 = (-activityscore[i + 1] / 100) * ybottom + ybottom;
+    line(x1, y1, x2, y2);
+  }
+
+  // Draw lines connecting weight score data points
+  stroke(0, 164, 186); // Change color to green
+  for (let i = 0; i < weightsummarydate.length - 1; i++) {
+    let x1 = xPositions[i];
+    let y1 = -normalizedWeightScores[i] * ybottom + ybottom;
+    let x2 = xPositions[i + 1];
+    let y2 = -normalizedWeightScores[i + 1] * ybottom + ybottom;
+    line(x1, y1, x2, y2);
+  }
+
+  // Draw lines connecting readiness score data points
+  stroke(211, 100, 100); // Change color to purple
+  for (let i = 0; i < readinesssummarydate.length - 1; i++) {
+    let x1 = xPositions[i];
+    let y1 = -normalizedReadinessScores[i] * ybottom + ybottom;
+    let x2 = xPositions[i + 1];
+    let y2 = -normalizedReadinessScores[i + 1] * ybottom + ybottom;
+    line(x1, y1, x2, y2);
+  }
+
+  // Draw circles at each sleep score data point
+  for (var i = 0; i < sleepsummarydate.length; i++) {
+    stroke(0);
+    fill(255, 255, 255);
+
+    var xpos = xPositions[i];
+    var ypos = (-sleepscore[i] / 100) * ybottom + ybottom;
+    circle(xpos, ypos, 4);
+  }
+
+  // Draw circles at each activity score data point
+  for (var i = 0; i < activitysummarydate.length; i++) {
+    stroke(0);
+    fill(255, 255, 255); // Set fill color to white
+
+    var xpos = xPositions[i];
+    var ypos = (-activityscore[i] / 100) * ybottom + ybottom;
+    circle(xpos, ypos, 4); // Draw a circle at the activity score data point
+  }
+
+  // Draw circles at each weight score data point
+  for (var i = 0; i < weightsummarydate.length; i++) {
+    stroke(0);
+    fill(255, 255, 255); // Set fill color to white
+
+    var xpos = xPositions[i];
+    var ypos = -normalizedWeightScores[i] * ybottom + ybottom;
+    circle(xpos, ypos, 4); // Draw a circle at the normalized weight score data point
+  }
+
+  // Draw circles at each readiness score data point
+  for (var i = 0; i < readinesssummarydate.length; i++) {
+    stroke(0);
+    fill(255, 255, 255); // Set fill color to white
+
+    var xpos = xPositions[i];
+    var ypos = -normalizedReadinessScores[i] * ybottom + ybottom;
+    circle(xpos, ypos, 4); // Draw a circle at the normalized readiness score data point
+  }
+
+  // Draw axes
+  stroke(0);
+  fill(0);
+  line(xtop, ybottom, xbottom, ybottom); // x-axis
+  line(xtop, ytop, xtop, ybottom); // y-axis
+  noStroke(0);
+  textAlign(CENTER, CENTER);
+  text("score", xtop, 20); // y-axis label
+  textAlign(LEFT, CENTER);
+  text("Date", xbottom, ybottom); // x-axis label
+}
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
