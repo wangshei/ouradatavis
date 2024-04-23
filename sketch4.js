@@ -242,9 +242,10 @@ function draw() {
   stroke(0, 0, 255);
   for (let i = 0; i < summarydate.length - 1; i++) {
     let x1 = xPositions[i];
-    let y1 = map(efficiency[i], 0, 100, height, 0);
+    //let y1 = map(efficiency[i], 0, 100, height, 0);
+    let y1 = -efficiency[i]/100*508+508;
     let x2 = xPositions[i + 1];
-    let y2 = map(efficiency[i + 1], 0, 100, height, 0);
+    let y2 = -efficiency[i+1]/100*508+508;
     line(x1, y1, x2, y2);
   }
 
@@ -263,8 +264,10 @@ function draw() {
   stroke(255, 0, 0); // Set color to red for steps data
   for (let i = 0; i < day_steps.length - 1; i++) {
     let steps_x1 = xPositions[i];
-    let steps_y1 = map(steps[i], 0, maxsteps, height, 0);//map from height to 0
-    let steps_y2 = map(steps[i + 1], 0, maxsteps, height, 0);//map from height to 0
+    let steps_y1 = -steps[i]/maxStepValue*508+508
+    //let steps_y1 = map(steps[i], 0, maxsteps, height, 0);//map from height to 0
+    //let steps_y2 = map(steps[i + 1], 0, maxsteps, height, 0);//map from height to 0
+    let steps_y2 = -steps[i+1]/maxStepValue*508+508
     let steps_x2 = xPositions[i + 1];
 
     line(steps_x1, steps_y1, steps_x2, steps_y2);
