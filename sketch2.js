@@ -19,6 +19,8 @@ var day_weight = [];
 
 let bar_width;
 let longest;
+let heaviest;
+let lightest;
 
 // Handle upload button click
 document.getElementById("upload-button").addEventListener("click", (e) => {
@@ -71,11 +73,11 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
           var t = float(weight_lbs[i]);
           if (t>heaviest){
             heaviest = t;
-            //console.log(longest + "is longest");
+            console.log(heaviest + "is heaviest");
           }
           if (t<lightest){
             lightest = t;
-            //console.log(longest + "is longest");
+            console.log(lightest + "is lightest");
           }
         }
         
@@ -208,17 +210,23 @@ function draw(){
       fill(0);
       textAlign(RIGHT, CENTER);
 
-      console.log(longest + ","+ longest/3600);
+      //console.log(longest + ","+ longest/3600);
       for (var i = 0; i<=longest;i+=3600){
         var ypos = map(i, 0, longest,508,50 )
-        text(i/3600+"hour",60,ypos); // this is the only thing that will change style
+        text(i/3600+" hour",60,ypos); // this is the only thing that will change style
       }
       textAlign(LEFT, CENTER);
+
+      console.log(heaviest + ","+ heaviest-lightest);
+      for (var i = lightest; i<=heaviest;i+=1){
+        var ypos = map(i, lightest, heaviest,580,50 )
+        text(i+" lb",870,ypos); // this is the only thing that will change style
+      }
 
       for (var i = 0; i<summary_date.length; i++){
        if (i%2==0){
         push();
-        translate(70 + i * bar_width+10, 512);
+        translate(68 + i * bar_width+10, 512);
         rotate(HALF_PI/2); // default is radiants
         text(summary_date[i],0,0);
         //console.log(summary_date[i]);
@@ -229,8 +237,8 @@ function draw(){
       }
       
     for (var i = 0; i<summary_date.length; i++){
-      stroke(0);
-      fill(255,255,255);
+      stroke(255);
+      fill(220,220,220);
 
       let barHeight = onset_latency[i] / 90;
       let yPos = 508 - barHeight-1;
@@ -238,7 +246,6 @@ function draw(){
       rect(xPos, yPos, bar_width, barHeight);
       //console.log(`Drawing latency at index ${i}: xPos=${xPos}, yPos=${yPos}, bar_width=${bar_width}, height=${barHeight}`);
 
-      stroke(255);
       fill(224,227,255);      
       let barHeight2 = light[i] / 90;
       let yPos2 = yPos - barHeight2-1;
@@ -269,7 +276,7 @@ function draw(){
       let weight_x2 = 70+ bar_width*[i+1];
       let weight_y2 = (weight_lbs[i+1]-lightest)*(-20)+508;
       line(weight_x1,weight_y1, weight_x2, weight_y2);
-      console.log(`Drawing line at index ${i}: xPos=${weight_x1}, yPos=${weight_y1}, xPos2=${weight_x2}, height=${weight_y2}`);
+      //console.log(`Drawing line at index ${i}: xPos=${weight_x1}, yPos=${weight_y1}, xPos2=${weight_x2}, height=${weight_y2}`);
 
       //noLoop();
     }
@@ -282,9 +289,11 @@ function draw(){
 
     fill(0);
 
-    line(65,508,865,508);
+    line(65,508,870,508);
     // y index
     line(65,50,65,508);
+    line(870,50,870,508);
+
     stroke(255);
 
     textAlign(CENTER, CENTER);
