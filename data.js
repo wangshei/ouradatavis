@@ -48,7 +48,9 @@ function updateInsights(category, insights) {
                                       <p>${insight}</p>
                                   </div>
                                   <br>`;
-      insightsContent.appendChild(insightElement);
+      if(insightsContent){
+        insightsContent.appendChild(insightElement);
+      }
   });
 }
 

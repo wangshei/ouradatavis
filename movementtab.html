@@ -155,7 +155,22 @@
           </span>
         </div>
         <div
-          class="weireq reqwaiting"
+          class="readreq reqwaiting"
+        >
+          <img
+            class="waitinggif"
+            src="./assets/waiting.gif"
+          />
+          <span
+            class="readtext"
+          >
+          REQUIRE [readiness.xlsx]
+          </span>
+          
+        </div>
+
+        <div
+        class="weireq reqwaiting"
         >
           <img
             class="waitinggif"
@@ -168,7 +183,7 @@
           </span>
           
         </div>
-      </div> 
+      </div>  
       </div>
     </div>
 
@@ -183,7 +198,9 @@ const tabs = document.querySelectorAll(".tab");
       const weightInsights = document.getElementById("weight-insights");
 
       
-
+      sleepInsights.style.display ="none";
+      overviewInsights.style.display ="none";
+      weightInsights.style.display ="none";
       
 
       tabs.forEach((tab) => {

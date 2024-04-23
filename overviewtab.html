@@ -79,7 +79,7 @@
                 <div class="key" style="background-color: #00A4BA; color: white;">Weight</div>
                 <div class="key" style="background-color: #D36464; color: white;">Readiness</div>
             </div>
-            <div id="overview-graph" class="graph" src="sketch1.js"></div>
+            <div id="overview-graph" class="graph" data-src="sketch5.js"></div>
             </div>
           </div>
           <div class="tile" id="insights-section">
@@ -155,7 +155,22 @@
           </span>
         </div>
         <div
-          class="weireq reqwaiting"
+          class="readreq reqwaiting"
+        >
+          <img
+            class="waitinggif"
+            src="./assets/waiting.gif"
+          />
+          <span
+            class="readtext"
+          >
+          REQUIRE [readiness.xlsx]
+          </span>
+          
+        </div>
+
+        <div
+        class="weireq reqwaiting"
         >
           <img
             class="waitinggif"
@@ -183,7 +198,9 @@ const tabs = document.querySelectorAll(".tab");
 
       
 
-      
+      sleepInsights.style.display ="none";
+      activityInsights.style.display ="none";
+      weightInsights.style.display ="none";
 
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
@@ -250,6 +267,6 @@ const tabs = document.querySelectorAll(".tab");
       };
     </script>
     
-    <script src="sketch1.js"></script>
+    <script src="sketch5.js"></script>
   </body>
 </html>
