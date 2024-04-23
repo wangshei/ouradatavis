@@ -44,7 +44,6 @@ let normalizedReadinessScores = [];
 var earliest = Infinity;
 var latest = 0;
 
-<<<<<<< HEAD
 // // Function to filter data by the first month
 // function filterDataByFirstMonth(summaryDates, scores) {
 //     // Get the date of the first entry
@@ -68,31 +67,6 @@ var latest = 0;
     
 //     return { filteredSummaryDates, filteredScores };
 // }
-=======
-// Function to filter data by the first month
-function filterDataByFirstMonth(summaryDates, scores) {
-  // Get the date of the first entry
-  const firstDate = new Date(summaryDates[0]);
-  // Get the month of the first entry
-  const firstMonth = firstDate.getMonth();
-
-  // Filter out data entries that belong to the first month
-  const filteredSummaryDates = [];
-  const filteredScores = [];
-  for (let i = 0; i < summaryDates.length; i++) {
-    const currentDate = new Date(summaryDates[i]);
-    if (currentDate.getMonth() === firstMonth) {
-      filteredSummaryDates.push(summaryDates[i]);
-      filteredScores.push(scores[i]);
-    } else {
-      // Stop once data entries from the next month are encountered
-      break;
-    }
-  }
-
-  return { filteredSummaryDates, filteredScores };
-}
->>>>>>> d3840abe6461510e3741f2033644210f12d7566f
 
 // //sleep
 // document.getElementById("upload-button").addEventListener("click", (e) => {
@@ -131,17 +105,6 @@ function filterDataByFirstMonth(summaryDates, scores) {
 //         let normalizedSleepScores = sleepscore.map((score) =>
 //           map(score, minSleepScore, maxSleepScore, 0, 1)
 //         );
-
-<<<<<<< HEAD
-//         // Filter sleep data by the first month
-//         const { filteredSummaryDates, filteredScores } = filterDataByFirstMonth(sleepsummarydate, sleepscore);
-=======
-        // Filter sleep data by the first month
-        const { filteredSummaryDates, filteredScores } = filterDataByFirstMonth(
-          sleepsummarydate,
-          sleepscore
-        );
->>>>>>> d3840abe6461510e3741f2033644210f12d7566f
 
 //         // Create dateTimestamps array
 //         var dateTimestamps = filteredSummaryDates.map((dateString) => {
@@ -205,17 +168,6 @@ function filterDataByFirstMonth(summaryDates, scores) {
 //           map(score, minActivityScore, maxActivityScore, 0, 1)
 //         );
 
-<<<<<<< HEAD
-//         // Filter activity data by the first month
-//         const { filteredSummaryDates, filteredScores } = filterDataByFirstMonth(activitysummarydate, activityscore);
-=======
-        // Filter activity data by the first month
-        const { filteredSummaryDates, filteredScores } = filterDataByFirstMonth(
-          activitysummarydate,
-          activityscore
-        );
->>>>>>> d3840abe6461510e3741f2033644210f12d7566f
-
 //         activityDataProcessed = true;
 //         checkDataProcessed();
 //       }
@@ -273,17 +225,6 @@ function filterDataByFirstMonth(summaryDates, scores) {
 //   };
 // });
 
-<<<<<<< HEAD
-// //readiness
-// document.getElementById("upload-button").addEventListener("click", (e) => {
-//   e.preventDefault();
-//   let fileReader2 = new FileReader();
-=======
-document.getElementById("upload-button").addEventListener("click", (e) => {
-  e.preventDefault();
-  let fileReader2 = new FileReader();
->>>>>>> d3840abe6461510e3741f2033644210f12d7566f
-
 //   // Read the selected file as binary string
 //   fileReader2.readAsBinaryString(readinessFile);
 
@@ -316,7 +257,7 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
 //         let minReadinessScore = Math.min(...readinessscore);
 //         let maxReadinessScore = Math.max(...readinessscore);
 
-<<<<<<< HEAD
+
 //         // Normalize the readiness score data from 0 to 1 and assign to normalizedReadinessScores
 //         normalizedReadinessScores = readinessscore.map(
 //           (score) =>
@@ -345,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
       activity = JSON.parse(localStorage.getItem('activityData')) || { summary_date: [], cal_active: [], steps: [], insights: [] };
       weight = JSON.parse(localStorage.getItem('weightData')) || { weight_lbs: [], day_weight: [] };
       readiness = JSON.parse(localStorage.getItem('readinessData')) || { summary_date: [], score: [], insights: [] };
-=======
+
         // Normalize the weight score data from 0 to 1 and assign to normalizedWeightScores
         normalizedReadinessScores = readinessscore.map(
           (score) =>
@@ -356,25 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ReadinessDataProcessed = true;
         checkDataProcessed();
       }
-    });
-  };
-});
-
-function checkDataProcessed() {
-  if (sleepDataProcessed && activityDataProcessed) {
-  }
-  if (!sleepDataProcessed && !activityDataProcessed) {
-  }
-  if (!sleepDataProcessed && activityDataProcessed) {
->>>>>>> d3840abe6461510e3741f2033644210f12d7566f
-  }
-
-  // Function to update the DOM with insights
-  function displayInsights() {
-      updateInsights('sleep', sleep.insights);
-      updateInsights('activity', activity.insights);
-      updateInsights('readiness', readiness.insights);
-  }
 
   // Initialize the application
   loadData();
@@ -416,8 +338,6 @@ divWidth;
 divHeight;
 
 function draw() {
-<<<<<<< HEAD
-  console.log("figfhton")
     if (!sleepDataProcessed || !activityDataProcessed || !weightDataProcessed || !readinessDataProcessed) {
       background(255);
       textAlign(CENTER, CENTER);
@@ -444,7 +364,7 @@ function draw() {
   
     // Calculate spacing between date labels
     let numLabels = 5; // Number of date labels to show
-    let labelSpacing = Math.ceil(sleepsummarydate.length / numLabels); // Calculate spacing between date labels
+    labelSpacing = Math.ceil(sleepsummarydate.length / numLabels); // Calculate spacing between date labels
   
     // Draw date labels horizontally
     textAlign(CENTER, CENTER);
@@ -456,11 +376,9 @@ function draw() {
   
     // Draw lines connecting sleep score data points
     strokeWeight(2); // Set the stroke weight to 2 pixels
-=======
   noStroke();
   stroke(0);
   fill(0);
->>>>>>> d3840abe6461510e3741f2033644210f12d7566f
 
   bar_width = (xbottom - xtop) / activitysummarydate.length;
 
