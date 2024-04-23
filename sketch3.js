@@ -49,13 +49,13 @@ duration = "day_weight";
 
 
 function setup(){
-   divWidth = document.getElementById('graph-section').clientWidth;
-   divHeight = document.getElementById('graph-section').clientHeight;
-  //console.log(divWidth + ", " + divHeight);
+   divWidth = document.getElementById('overview-graph').clientWidth /2;
+   divHeight = document.getElementById('overview-graph').clientHeight;
+  console.log(divWidth + ", " + divHeight);
 
   var canvas = createCanvas(divWidth, divHeight);
-  canvas.parent("activity-insights");
-  //console.log("Sketch 3 Setup complete, summary_date.length:", summary_date.length);
+  canvas.parent("activity-graph-1");
+  // console.log("Sketch 3 Setup complete, summary_date.length:", summary_date.length);
   //noLoop();
   xbottom = divWidth-xtop;
   ybottom = divHeight-ytop;
@@ -74,10 +74,10 @@ function setup(){
 
 
 function draw(){
-  // console.log(sleep)
-  divWidth = document.getElementById('activity-insights').clientWidth;
-  divHeight = document.getElementById('activity-insights').clientHeight;
-  //console.log(divWidth + ", " + divHeight);
+  console.log(sleep);
+  divWidth = document.getElementById('activity-graph-1').clientWidth;
+  divHeight = document.getElementById('activity-graph-1').clientHeight;
+  console.log(divWidth + ", " + divHeight);
 
   xbottom = divWidth-xtop;
   ybottom = divHeight-ytop;
