@@ -51,6 +51,50 @@ const analyzeSleepData = (data, metric) => {
   return { anomalies, highSdDates };
 };
 
+// Function to analyze weight data for anomalies and high standard deviation
+const analyzeWeightData = (data) => {
+  const mean = average(data);
+  const sd = standardDeviation(data, mean);
+  const lowThreshold = mean - 2 * sd; // Define threshold for anomalies
+  const highSdThreshold = mean + 1.5 * sd; // Define threshold for high standard deviation
+
+  let anomalies = [];
+  let highSdDates = [];
+
+  data.forEach((value, index) => {
+    if (value < lowThreshold) {
+      anomalies.push({ date: weight.day_weight[index], value });
+    }
+    if (Math.abs(value - mean) > highSdThreshold) {
+      highSdDates.push({ date: weight.day_weight[index], value });
+    }
+  });
+
+  return { anomalies, highSdDates };
+};
+
+// Function to analyze activity data for anomalies and high standard deviation
+const analyzeActivityData = (data) => {
+  const mean = average(data);
+  const sd = standardDeviation(data, mean);
+  const lowThreshold = mean - 2 * sd; // Define threshold for anomalies
+  const highSdThreshold = mean + 1.5 * sd; // Define threshold for high standard deviation
+
+  let anomalies = [];
+  let highSdDates = [];
+
+  data.forEach((value, index) => {
+    if (value < lowThreshold) {
+      anomalies.push({ date: activity.summary_date[index], value });
+    }
+    if (Math.abs(value - mean) > highSdThreshold) {
+      highSdDates.push({ date: activity.summary_date[index], value });
+    }
+  });
+
+  return { anomalies, highSdDates };
+};
+
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -120,15 +164,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
             // console.log("Total sleep data :", total);
 
        }else if(selectedFile.name.includes("weight")){
-
-              workbook.SheetNames.forEach((sheet) => {
+                workbook.SheetNames.forEach((sheet) => {
                   const result = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], { raw: false });
 
                   for (let i = 0; i < result.length; i++) {
-                      weight.weight_lbs.push(result[i].weight_lbs);
-                      weight.day_weight.push(result[i].day);
-                  }
+                    weight.weight_lbs.push(result[i].weight_lbs);
+                    weight.day_weight.push(result[i].day);
+                }
               });
+
+               // Perform analysis on weight data
+              const { anomalies, highSdDates } = analyzeWeightData(weight.weight_lbs);
+
+              // Generate dynamic insights based on analysis
+              // const insights = [];
+              // insights.push(`Average weight is ${average(weight.weight_lbs).toFixed(2)} lbs.`);
+              // insights.push(`Detected ${anomalies.length} days with unusual weight readings: ${anomalies.map(a => `${a.date} (${a.value} lbs)`).join(', ')}.`);
+              // insights.push(`Days with high standard deviation in weight: ${highSdDates.map(a => `${a.date} (${a.value} lbs)`).join(', ')}.`);
+
+              // console.log(insights.join(" "));
+
 
               dataprocessed.weight = true;
               let domtext = document.querySelector(".weitext");
@@ -139,7 +194,39 @@ document.addEventListener('DOMContentLoaded', (event) => {
               disicon.src ="./assets/check.png";
             
           }else if(selectedFile.name.includes("activity")){
+
+            workbook.SheetNames.forEach((sheet) => {
+              const result = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], { raw: false });
+
+              result.forEach(row => {
+                activity.summary_date.push(row.summary_date);
+                activity.steps.push(parseInt(row.steps));
+              });
+          });
+
+
+            
+  
             dataprocessed.activity = true;
+  
+            // Perform analysis on activity data
+            const { anomalies, highSdDates } = analyzeActivityData(activity.steps);
+  
+            // Generate dynamic insights based on analysis
+            const insights = [];
+            insights.push(`Average daily steps are ${average(activity.steps).toFixed(0)}.`);
+            insights.push(`Detected ${anomalies.length} days with unusually low step counts: ${anomalies.map(a => `${a.date} (${a.value} steps)`).join(', ')}.`);
+            insights.push(`Days with high variability in step count: ${highSdDates.map(a => `${a.date} (${a.value} steps)`).join(', ')}.`);
+  
+            console.log(insights.join(" "));
+  
+            // Update UI to indicate processing is done
+            let domtext = document.querySelector(".activitytext");
+            domtext.innerHTML = "RECEIVED [activity.xlsx]";
+            domtext.style.color = "#869A7E";
+            let disicon = document.querySelector(".actreq .waitinggif");
+            disicon.style.transform = "scale(0.28)";
+            disicon.src = "./assets/check.png";
           }else{
             return;
           }
