@@ -65,47 +65,23 @@
       </div>
       <div id="main">
         <div id="tabs">
-          <div class="tab" id="selected">Overview</div>
-          <div class="tab">Sleep</div>
-          <div class="tab">Activity</div>
-          <div class="tab">Movement</div>
+          <a class="tab" href="overviewtab.html">Overview</a>
+          <a class="tab" id="selected">Sleep</a>
+          <a class="tab" href="activitytab.html">Activity</a>
+          <a class="tab" href="movementtab.html" >Movement</a>
         </div>
         <div id="content">
           <div class="tile" id="graph-section">
             <div id="key-section">
-              <div id="overview-key" class="keys">Overview lol</div>
-              <div id="sleep-key" class="keys">
-                <div class="key-section">
-                  <div class="key" style="background-color: #E6E8F3;">Latency</div>
-                  <div class="key" style="background-color: #E0E3FF; ">Light Sleep</div>
-                  <div class="key" style="background-color: #A5A4C9;">REM</div>
-                  <div class="key" style="background-color: #1D1B77; color: white;">Deep Sleep</div>
-                  <div class="key">Weight</div>
-              </div>
-              </div>
-              <div id="activity-key" class="keys">activities lol</div>
+              <div id="sleep-key" class="keys">Overview lol</div>
             </div>
-            <div id="overview-graph" class="graph"></div>
-            <div id="sleep-graph" class="graph" data-src="sketch2.js"></div>
-            <div id="activity-graph" class="graph" data-src="sketch4.js"></div>
-            <div id="weight-graph" class="graph" data-src="sketch3.js"></div>
+            <div id="sleep-graph" class="graph" src="sketch2.js"></div>
+            
           </div>
           <div class="tile" id="insights-section">
-            <div id="overview-insights" class="insights">
-              <div class="title">Insights</div>
-              <div class="insights-content" id="overview-insights-content"></div>
-            </div>
             <div id="sleep-insights" class="insights">
               <div class="title">Insights</div>
-              <div class="insights-content" id="sleep-insights-content"></div>
-            </div>
-            <div id="activity-insights" class="insights">
-              <div class="title">Insights</div>
-              <div class="insights-content" id="activity-insights-content"></div>
-            </div>
-            <div id="weight-insights" class="insights">
-              <div class="title">Insights</div>
-              <div class="insights-content" id="weight-insights-content"></div>
+              <div class="insights-content" id="overview-insights-content"></div>
             </div>
           </div>
         </div>
@@ -181,104 +157,6 @@
     </div>
 
     <script defer>
-      const tabs = document.querySelectorAll(".tab");
-      const overviewGraph = document.getElementById("overview-graph");
-      const sleepGraph = document.getElementById("sleep-graph");
-      const activityGraph = document.getElementById("activity-graph");
-      const weightGraph = document.getElementById("weight-graph");
-
-      const overviewInsights = document.getElementById("overview-insights");
-      const sleepInsights = document.getElementById("sleep-insights");
-      const activityInsights = document.getElementById("activity-insights");
-      const weightInsights = document.getElementById("weight-insights");
-
-      const overviewKey = document.getElementById("overview-key");
-      const sleepKey = document.getElementById("sleep-key");
-      const activityKey = document.getElementById("activity-key");
-      const weightKey = document.getElementById("weight-insights");
-
-
-      
-
-      tabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
-
-          tabs.forEach((t) => t.removeAttribute("id"));
-          tab.setAttribute("id", "selected");
-
-          if (tab.innerHTML === "Overview") {
-            overviewGraph.style.display = "block";
-            sleepGraph.style.display = "none";
-            activityGraph.style.display = "none";
-            weightGraph.style.display = "none";
-
-
-            overviewInsights.style.display = "block";
-            sleepInsights.style.display = "none";
-            activityInsights.style.display = "none";
-            weightInsights.style.display = "none";
-
-            overviewKey.style.display = "block";
-            sleepKey.style.display = "none";
-            activityKey.style.display = "none";
-            weightKey.style.display = "none";
-
-
-          } else if (tab.innerHTML === "Sleep") {
-            overviewGraph.style.display = "none";
-            sleepGraph.style.display = "block";
-            activityGraph.style.display = "none";
-            weightGraph.style.display = "none";
-
-            overviewInsights.style.display = "none";
-            sleepInsights.style.display = "block";
-            activityInsights.style.display = "none";
-            weightInsights.style.display = "none";
-
-            overviewKey.style.display = "none";
-            sleepKey.style.display = "block";
-            activityKey.style.display = "none";
-            weightKey.style.display = "none";
-
-
-            
-          } else if (tab.innerHTML === "Activity") {
-            overviewGraph.style.display = "none";
-            sleepGraph.style.display = "none";
-            activityGraph.style.display = "block";
-            weightGraph.style.display = "none";
-
-            overviewInsights.style.display = "none";
-            sleepInsights.style.display = "none";
-            activityInsights.style.display = "block";
-            weightInsights.style.display = "none";
-
-            overviewKey.style.display = "none";
-            sleepKey.style.display = "none";
-            activityKey.style.display = "block";
-            weightKey.style.display = "none";
-
-          }else if(tab.innerHTML === "Movement") {
-            overviewGraph.style.display = "none";
-            sleepGraph.style.display = "none";
-            activityGraph.style.display = "none";
-            weightGraph.style.display = "block";
-
-            overviewInsights.style.display = "none";
-            sleepInsights.style.display = "none";
-            activityInsights.style.display = "none";
-            weightInsights.style.display = "block";
-
-            overviewKey.style.display = "none";
-            sleepKey.style.display = "none";
-            activityKey.style.display = "none";
-            weightKey.style.display = "block";
-
-          }
-          
-
-        });
-      });
       document.addEventListener("DOMContentLoaded", function () {
         // Hide the modal when the page loads
         closeModal();
@@ -302,10 +180,6 @@
       };
     </script>
     
-    <script src="sketch1.js"></script>
     <script src="sketch2.js"></script>
-    <script src="sketch3.js"></script>
-    <script src="sketch4.js"></script>
   </body>
 </html>
-5

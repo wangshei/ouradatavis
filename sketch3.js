@@ -8,10 +8,34 @@
 // });
 
 
-var weight_lbs = weight.weight_lbs;
-var day_weight = weight.day_weight;
+document.addEventListener('DOMContentLoaded', () => {
+  // Load data from local storage
+  function loadData() {
+      const defaultData = { light: [], rem: [], deep: [], total: [], onset_latency: [], summary_date: [], efficiency: [], insights: [] };
+      sleep = JSON.parse(localStorage.getItem('sleepData')) || defaultData;
+      activity = JSON.parse(localStorage.getItem('activityData')) || { summary_date: [], cal_active: [], steps: [], insights: [] };
+      weight = JSON.parse(localStorage.getItem('weightData')) || { weight_lbs: [], day_weight: [] };
+      readiness = JSON.parse(localStorage.getItem('readinessData')) || { summary_date: [], score: [], insights: [] };
+  }
 
-var cal_active = activity.cal_active;
+  // Function to update the DOM with insights
+  function displayInsights() {
+      updateInsights('sleep', sleep.insights);
+      updateInsights('activity', activity.insights);
+      updateInsights('readiness', readiness.insights);
+  }
+
+  // Initialize the application
+  loadData();
+
+   weight_lbs = weight.weight_lbs;
+day_weight = weight.day_weight;
+
+ cal_active = activity.cal_active;
+})
+
+
+
 
  bar_width;
  longest;
@@ -35,26 +59,26 @@ var cal_active = activity.cal_active;
 // }
 
 
- duration;
-duration = "day_weight";
- latency_height;
+ let duration;
+ duration = "day_weight";
+ let latency_height;
 
  xtop = 65;
  ytop = 65;
- xbottom;
- ybottom;
- graphheight;
- divWidth;
- divHeight;
+ let xbottom;
+      let ybottom;
+      let graphheight;
+      let divWidth;
+      let divHeight;
 
 
 function setup(){
-   divWidth = document.getElementById('overview-graph').clientWidth /2;
-   divHeight = document.getElementById('overview-graph').clientHeight;
+   divWidth = document.getElementById('movement-graph').clientWidth;
+   divHeight = document.getElementById('movement-graph').clientHeight;
   console.log(divWidth + ", " + divHeight);
 
-  var canvas = createCanvas(divWidth, divHeight);
-  canvas.parent("activity-graph-1");
+  var weightCanvas = createCanvas(divWidth, divHeight);
+  weightCanvas.parent("movement-graph");
   // console.log("Sketch 3 Setup complete, summary_date.length:", summary_date.length);
   //noLoop();
   xbottom = divWidth-xtop;
@@ -75,13 +99,15 @@ function setup(){
 
 function draw(){
   console.log(sleep);
-  divWidth = document.getElementById('activity-graph-1').clientWidth;
-  divHeight = document.getElementById('activity-graph-1').clientHeight;
+  divWidth = document.getElementById('movement-graph').clientWidth;
+  divHeight = document.getElementById('movement-graph').clientHeight;
   console.log(divWidth + ", " + divHeight);
 
   xbottom = divWidth-xtop;
   ybottom = divHeight-ytop;
   graphheight = ybottom-ytop;
+
+  var total = sleep.total;
 
   var weight_lbs = weight.weight_lbs;
   var day_weight = weight.day_weight;
@@ -231,5 +257,8 @@ function draw(){
 
 
 function windowResized(){
-  resizeCanvas(windowWidth, windowHeight);
+  divWidth = document.getElementById('activity-graph').clientWidth;
+  divHeight = document.getElementById('activity-graph').clientHeight;
+  resizeCanvas(divWidth, divHeight);
 }
+

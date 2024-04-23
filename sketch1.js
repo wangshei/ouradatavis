@@ -1,218 +1,243 @@
-let sleepFile;
-let activityFile;
-let weightFile;
-let readinessFile;
-let sleepDataProcessed = false;
-let activityDataProcessed = false;
-let weightDataProcess = false;
-let readinessDataProcess = false;
-let xPositions = [];
-let bar_width = 14.75;
+// let sleepFile;
+// let activityFile;
+// let weightFile;
+// let readinessFile;
+// let sleepDataProcessed = false;
+// let activityDataProcessed = false;
+// let weightDataProcess = false;
+// let readinessDataProcess = false;
+// let xPositions = [];
+// let bar_width = 14.75;
 
-// Get the selected file when input changes
-document.getElementById("sleepFile").addEventListener("change", (event) => {
-  sleepFile = event.target.files[0]; // selecting the file
-});
+// // Get the selected file when input changes
+// document.getElementById("sleepFile").addEventListener("change", (event) => {
+//   sleepFile = event.target.files[0]; // selecting the file
+// });
 
-document.getElementById("activityFile").addEventListener("change", (event) => {
-  activityFile = event.target.files[0]; // selecting the file
-});
+// document.getElementById("activityFile").addEventListener("change", (event) => {
+//   activityFile = event.target.files[0]; // selecting the file
+// });
 
-document.getElementById("weightFile").addEventListener("change", (event) => {
-  weightFile = event.target.files[0]; // selecting the file
-});
+// document.getElementById("weightFile").addEventListener("change", (event) => {
+//   weightFile = event.target.files[0]; // selecting the file
+// });
 
-document.getElementById("readinessFile").addEventListener("change", (event) => {
-  readinessFile = event.target.files[0]; // selecting the file
-});
+// document.getElementById("readinessFile").addEventListener("change", (event) => {
+//   readinessFile = event.target.files[0]; // selecting the file
+// });
 
-// set up arrays to be populated
-var sleepscore = [];
-var sleepsummarydate = [];
-
-var activityscore = [];
-var activitysummarydate = [];
-
-var weightscore = [];
-var weightsummarydate = [];
-let normalizedWeightScores = [];
-
-var readinessscore = [];
-var readinesssummarydate = [];
-let normalizedreadinessScores = [];
+// // set up arrays to be populated
 
 
+document.addEventListener('DOMContentLoaded', () => {
+  // Load data from local storage
+  function loadData() {
+      const defaultData = { light: [], rem: [], deep: [], total: [], onset_latency: [], summary_date: [], efficiency: [], insights: [] };
+      sleep = JSON.parse(localStorage.getItem('sleepData')) || defaultData;
+      activity = JSON.parse(localStorage.getItem('activityData')) || { summary_date: [], cal_active: [], steps: [], insights: [] };
+      weight = JSON.parse(localStorage.getItem('weightData')) || { weight_lbs: [], day_weight: [] };
+      readiness = JSON.parse(localStorage.getItem('readinessData')) || { summary_date: [], score: [], insights: [] };
+  }
 
-var earliest = Infinity;
-var latest = 0;
+  // Function to update the DOM with insights
+  function displayInsights() {
+      updateInsights('sleep', sleep.insights);
+      updateInsights('activity', activity.insights);
+      updateInsights('readiness', readiness.insights);
+  }
 
-//sleep
+  // Initialize the application
+  loadData();
 
-document.getElementById("upload-button").addEventListener("click", (e) => {
-  e.preventDefault();
+  
+sleepscore = sleep.sleepscore;
+sleepsummarydate = sleep.sleepsummarydate;
 
-  let fileReader = new FileReader();
+activityscore = activity.activityscore;
+activitysummarydate = activity.activitysummarydate;
 
-  // Read the selected file as binary string
-  fileReader.readAsBinaryString(sleepFile);
+weightscore = weight.weightscore;
+weightsummarydate = weight.weightsummarydate;
+normalizedWeightScores = weight.normalizedWeightScores;
 
-  // Process the file data when it's loaded
-  fileReader.onload = (event) => {
-    let fileData = event.target.result;
-
-    // Read the Excel workbook
-    let workbook = XLSX.read(
-      fileData,
-      { type: "binary" },
-      { dateNF: "mm/dd/yyyy" }
-    );
-
-    // Change each sheet in the workbook to json
-    workbook.SheetNames.forEach(async (sheet) => {
-      const result = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
-        raw: false,
-      });
-
-      if (sleepFile) {
-        for (var i = 0; i < result.length; i++) {
-          sleepscore.push(result[i].score);
-          sleepsummarydate.push(result[i].summary_date);
-        }
-
-        // Normalize the sleep score data from 0 to 1
-        let minSleepScore = Math.min(...sleepscore);
-        let maxSleepScore = Math.max(...sleepscore);
-        let normalizedSleepScores = sleepscore.map((score) =>
-          map(score, minSleepScore, maxSleepScore, 0, 1)
-        );
-
-        // Create dateTimestamps array
-        var dateTimestamps = sleepsummarydate.map((dateString) => {
-          noStroke();
-          var parts = dateString.split("/");
-          var year = parseInt(parts[2]) + 2000; // Assuming the year is represented as two digits
-          var month = parseInt(parts[0]) - 1; // Months are 0-indexed in JavaScript
-          var day = parseInt(parts[1]);
-          return new Date(year, month, day).getTime(); // Convert to timestamp
-        });
-
-        // Calculate earliest and latest timestamps
-        var latestTimeStamp = Math.max(...dateTimestamps);
-        var earliestTimeStamp = Math.min(...dateTimestamps);
-
-        xPositions = dateTimestamps.map((timestamp) =>
-          map(timestamp, earliestTimeStamp, latestTimeStamp, 65, 865)
-        );
-
-        sleepDataProcessed = true;
-        checkDataProcessed();
-      }
-    });
-  };
-});
-
-//activity
-
-document.getElementById("upload-button").addEventListener("click", (e) => {
-  e.preventDefault();
-  let fileReader2 = new FileReader();
-
-  // Read the selected file as binary string
-  fileReader2.readAsBinaryString(activityFile);
-
-  // Process the file data when it's loaded
-  fileReader2.onload = (event) => {
-    let fileData2 = event.target.result;
-
-    // Read the Excel workbook
-    let workbook = XLSX.read(
-      fileData2,
-      { type: "binary" },
-      { dateNF: "mm/dd/yyyy" }
-    );
-
-    // Change each sheet in the workbook to json
-    workbook.SheetNames.forEach(async (sheet) => {
-      const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
-        raw: false,
-      });
-
-      if (activityFile) {
-        for (var i = 0; i < result2.length; i++) {
-          activityscore.push(result2[i].score);
-          activitysummarydate.push(result2[i].summary_date);
-        }
-        // Normalize the activity score data from 0 to 1
-        let minActivityScore = Math.min(...activityscore);
-        let maxActivityScore = Math.max(...activityscore);
-        let normalizedActivityScores = activityscore.map((score) =>
-          map(score, minActivityScore, maxActivityScore, 0, 1)
-        );
-
-        weightDataProcessed = true;
-        checkDataProcessed();
-      }
-    });
-  };
-});
-
-
-
-//weight
-
-document.getElementById("upload-button").addEventListener("click", (e) => {
-  e.preventDefault();
-  let fileReader2 = new FileReader();
-
-  // Read the selected file as binary string
-  fileReader2.readAsBinaryString(weightFile);
-
-  // Process the file data when it's loaded
-  fileReader2.onload = (event) => {
-    let fileData2 = event.target.result;
-
-    // Read the Excel workbook
-    let workbook = XLSX.read(
-      fileData2,
-      { type: "binary" },
-      { dateNF: "mm/dd/yyyy" }
-    );
-
-    // Change each sheet in the workbook to json
-    workbook.SheetNames.forEach(async (sheet) => {
-      const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
-        raw: false,
-      });
-
-      if (weightFile) {
-        for (var i = 0; i < result2.length; i++) {
-          // Parse the weight value as an integer
-          let weight = parseInt(result2[i].weight_lbs);
-          weightscore.push(weight);
-          weightsummarydate.push(result2[i].day);
-        }
-
-        // Calculate the minimum and maximum values of the weight scores
-        let minWeightScore = Math.min(...weightscore);
-        let maxWeightScore = Math.max(...weightscore);
-
-        // Normalize the weight score data from 0 to 1 and assign to normalizedWeightScores
-        normalizedWeightScores = weightscore.map(
-          (score) =>
-            (score - minWeightScore) / (maxWeightScore - minWeightScore)
-        );
-
-        weightDataProcessed = true;
-        checkDataProcessed();
-      }
-    });
-  };
-});
+readinessscore = [];
+readinesssummarydate = [];
+normalizedreadinessScores = [];
+})
 
 
 
 
-//readiness
+// var earliest = Infinity;
+// var latest = 0;
+
+// //sleep
+
+// document.getElementById("upload-button").addEventListener("click", (e) => {
+//   e.preventDefault();
+
+//   let fileReader = new FileReader();
+
+//   // Read the selected file as binary string
+//   fileReader.readAsBinaryString(sleepFile);
+
+//   // Process the file data when it's loaded
+//   fileReader.onload = (event) => {
+//     let fileData = event.target.result;
+
+//     // Read the Excel workbook
+//     let workbook = XLSX.read(
+//       fileData,
+//       { type: "binary" },
+//       { dateNF: "mm/dd/yyyy" }
+//     );
+
+//     // Change each sheet in the workbook to json
+//     workbook.SheetNames.forEach(async (sheet) => {
+//       const result = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+//         raw: false,
+//       });
+
+//       if (sleepFile) {
+//         for (var i = 0; i < result.length; i++) {
+//           sleepscore.push(result[i].score);
+//           sleepsummarydate.push(result[i].summary_date);
+//         }
+
+//         // Normalize the sleep score data from 0 to 1
+//         let minSleepScore = Math.min(...sleepscore);
+//         let maxSleepScore = Math.max(...sleepscore);
+//         let normalizedSleepScores = sleepscore.map((score) =>
+//           map(score, minSleepScore, maxSleepScore, 0, 1)
+//         );
+
+//         // Create dateTimestamps array
+//         var dateTimestamps = sleepsummarydate.map((dateString) => {
+//           noStroke();
+//           var parts = dateString.split("/");
+//           var year = parseInt(parts[2]) + 2000; // Assuming the year is represented as two digits
+//           var month = parseInt(parts[0]) - 1; // Months are 0-indexed in JavaScript
+//           var day = parseInt(parts[1]);
+//           return new Date(year, month, day).getTime(); // Convert to timestamp
+//         });
+
+//         // Calculate earliest and latest timestamps
+//         var latestTimeStamp = Math.max(...dateTimestamps);
+//         var earliestTimeStamp = Math.min(...dateTimestamps);
+
+//         xPositions = dateTimestamps.map((timestamp) =>
+//           map(timestamp, earliestTimeStamp, latestTimeStamp, 65, 865)
+//         );
+
+//         sleepDataProcessed = true;
+//         checkDataProcessed();
+//       }
+//     });
+//   };
+// });
+
+// //activity
+
+// document.getElementById("upload-button").addEventListener("click", (e) => {
+//   e.preventDefault();
+//   let fileReader2 = new FileReader();
+
+//   // Read the selected file as binary string
+//   fileReader2.readAsBinaryString(activityFile);
+
+//   // Process the file data when it's loaded
+//   fileReader2.onload = (event) => {
+//     let fileData2 = event.target.result;
+
+//     // Read the Excel workbook
+//     let workbook = XLSX.read(
+//       fileData2,
+//       { type: "binary" },
+//       { dateNF: "mm/dd/yyyy" }
+//     );
+
+//     // Change each sheet in the workbook to json
+//     workbook.SheetNames.forEach(async (sheet) => {
+//       const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+//         raw: false,
+//       });
+
+//       if (activityFile) {
+//         for (var i = 0; i < result2.length; i++) {
+//           activityscore.push(result2[i].score);
+//           activitysummarydate.push(result2[i].summary_date);
+//         }
+//         // Normalize the activity score data from 0 to 1
+//         let minActivityScore = Math.min(...activityscore);
+//         let maxActivityScore = Math.max(...activityscore);
+//         let normalizedActivityScores = activityscore.map((score) =>
+//           map(score, minActivityScore, maxActivityScore, 0, 1)
+//         );
+
+//         weightDataProcessed = true;
+//         checkDataProcessed();
+//       }
+//     });
+//   };
+// });
+
+
+
+// //weight
+
+// document.getElementById("upload-button").addEventListener("click", (e) => {
+//   e.preventDefault();
+//   let fileReader2 = new FileReader();
+
+//   // Read the selected file as binary string
+//   fileReader2.readAsBinaryString(weightFile);
+
+//   // Process the file data when it's loaded
+//   fileReader2.onload = (event) => {
+//     let fileData2 = event.target.result;
+
+//     // Read the Excel workbook
+//     let workbook = XLSX.read(
+//       fileData2,
+//       { type: "binary" },
+//       { dateNF: "mm/dd/yyyy" }
+//     );
+
+//     // Change each sheet in the workbook to json
+//     workbook.SheetNames.forEach(async (sheet) => {
+//       const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+//         raw: false,
+//       });
+
+//       if (weightFile) {
+//         for (var i = 0; i < result2.length; i++) {
+//           // Parse the weight value as an integer
+//           let weight = parseInt(result2[i].weight_lbs);
+//           weightscore.push(weight);
+//           weightsummarydate.push(result2[i].day);
+//         }
+
+//         // Calculate the minimum and maximum values of the weight scores
+//         let minWeightScore = Math.min(...weightscore);
+//         let maxWeightScore = Math.max(...weightscore);
+
+//         // Normalize the weight score data from 0 to 1 and assign to normalizedWeightScores
+//         normalizedWeightScores = weightscore.map(
+//           (score) =>
+//             (score - minWeightScore) / (maxWeightScore - minWeightScore)
+//         );
+
+//         weightDataProcessed = true;
+//         checkDataProcessed();
+//       }
+//     });
+//   };
+// });
+
+
+
+
+// //readiness
 
 document.getElementById("upload-button").addEventListener("click", (e) => {
   e.preventDefault();
@@ -264,19 +289,25 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
 });
 
 
-function checkDataProcessed() {
-  if (sleepDataProcessed && activityDataProcessed) {
-  }
-  if (!sleepDataProcessed && !activityDataProcessed) {
-  }
-  if (!sleepDataProcessed && activityDataProcessed) {
-  }
-}
+// function checkDataProcessed() {
+//   if (sleepDataProcessed && activityDataProcessed) {
+//   }
+//   if (!sleepDataProcessed && !activityDataProcessed) {
+//   }
+//   if (!sleepDataProcessed && activityDataProcessed) {
+//   }
+// }
 
-function setup() {
-  var canvas = createCanvas(windowWidth, windowHeight);
-  canvas.parent("sketch1");
-  frameRate(60);
+
+function setup(){
+  divWidth = document.getElementById('overview-graph').clientWidth;
+  divHeight = document.getElementById('overview-graph').clientHeight;
+ console.log(divWidth + ", " + divHeight);
+
+ var weightCanvas = createCanvas(divWidth, divHeight);
+ weightCanvas.parent("overview-graph");
+
+
 }
 
 function draw() {
@@ -403,3 +434,4 @@ function draw() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
+
