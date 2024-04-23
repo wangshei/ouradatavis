@@ -25,6 +25,9 @@
 #activity-graph{
     display:none;
 }
+#weight-graph{
+    display:none;
+}
 #overview-insights{
     display:block;
 }
@@ -37,6 +40,9 @@
     display:none;
 }
 
+#weight-insights{
+    display:none;
+}
 #overview-key{
     display:block;
 }
@@ -49,9 +55,27 @@
     display:none;
 }
 
+#weight-key{
+    display:none;
+}
+
+
 #key-section{
     position:relative;
 }
+
+.keys{
+    position:absolute;
+    
+}
+.graph-half{
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    z-index:0;
+}
+
+
 
 .key-section{
     display:flex;
@@ -103,7 +127,7 @@ h1{
     justify-content: center;
     align-items: center;
     border-radius: 100px;
-    border: 1px solid #000;
+border: 1px solid #000;
 }
 
 #main-content{
