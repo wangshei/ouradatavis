@@ -1,17 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Graphing Normalized Data</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
-</head>
-<body>
-  <h2>Select Excel files to upload:</h2>
-  <input id="fileInput" type="file" accept=".xlsx" multiple>
-  <canvas id="myCanvas" width="800" height="400"></canvas>
+	<head>
+		<meta charset="utf-8">
+    	<title>DataVis</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script
+   src="https://cdn.jsdelivr.net/npm/xlsx@0.16.8/dist/xlsx.full.min.js"
+   integrity="sha256-Ic7HP804IrYks4vUqX1trFF1Nr33RjONeJESZnYxsOY="
+   crossorigin="anonymous"></script>
+		<script src="p5.min.js"></script>
+		<style>
+			body{
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
 
-  <script src="sketch1.js"></script>
-</body>
+	<body>
+		
+		<form class="input-group col-4 mb-5">
+			<p>Choose Sleep File</p>
+			<input type="file" class="form-control" id="sleepFile" />
+			</button>
+			
+			<p>Choose Activity File</p>
+			<input type="file" class="form-control" id="activityFile" />
+			 
+			<button class="btn ml-2" type="submit" id="upload-button">
+				Upload
+			   </button>
+	   </form>
+	   <div id="sketch1">
+	</div>
+	   <script src="sketch1.js"></script>
+
+	</body>
 </html>

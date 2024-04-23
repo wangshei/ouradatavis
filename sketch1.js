@@ -1,116 +1,115 @@
-// Function to normalize data
-function normalizeData(data) {
-  const minMaxValues = {};
+let sleepFile;
 
-  // Find min and max values for each property
-  for (let property in data[0]) {
-    minMaxValues[property] = {
-      min: Math.min(...data.map(item => item[property])),
-      max: Math.max(...data.map(item => item[property])),
-    };
-  }
-
-  // Normalize data
-  return data.map(item => {
-    const normalizedItem = {};
-    for (let property in item) {
-      const { min, max } = minMaxValues[property];
-      normalizedItem[property] = (item[property] - min) / (max - min);
-    }
-    return normalizedItem;
-  });
-}
-
-// Function to plot the graph on canvas
-function plotGraph(ctx, datasets, startDate, endDate) {
-  const canvasWidth = ctx.canvas.width;
-  const canvasHeight = ctx.canvas.height;
-  
-  // Clear canvas
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  
-  // Draw axes
-  ctx.beginPath();
-  ctx.moveTo(50, 50);
-  ctx.lineTo(50, canvasHeight - 50);
-  ctx.lineTo(canvasWidth - 50, canvasHeight - 50);
-  ctx.stroke();
-  
-  // Plot datasets
-  const numDatasets = datasets.length;
-  const xOffset = (canvasWidth - 100) / (endDate - startDate);
-  const yOffset = (canvasHeight - 100) / 1; // Assuming y-axis range is from 0 to 1
-  
-  datasets.forEach((dataset, index) => {
-    ctx.beginPath();
-    dataset.forEach((data, dataIndex) => {
-      const x = 50 + (data.date - startDate) * xOffset;
-      const y = canvasHeight - 50 - data.value * yOffset;
-      if (dataIndex === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-      }
-    });
-    ctx.strokeStyle = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
-    ctx.stroke();
-  });
-}
-
-// Load and process Excel files
-function processData(files) {
-  const canvas = document.getElementById('myCanvas');
-  const ctx = canvas.getContext('2d');
-  let datasets = [];
-  let startDate = null;
-  let endDate = null;
-  let filesProcessed = 0;
-
-  // Function to process each file
-  function processFile(file) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      const data = new Uint8Array(event.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
-
-      // Assume only one sheet per file
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-      // Extract dates and values
-      const dataset = rows.slice(1).map(row => ({
-        date: new Date(row[0]), // Assuming the date is in the first column
-        value: parseFloat(row[1]) // Assuming the value is in the second column
-      }));
-
-      // Determine start and end dates
-      const firstDate = dataset[0].date;
-      const lastDate = dataset[dataset.length - 1].date;
-      if (!startDate || firstDate < startDate) {
-        startDate = firstDate;
-      }
-      if (!endDate || lastDate > endDate) {
-        endDate = lastDate;
-      }
-
-      // Normalize data and push to datasets array
-      datasets.push(normalizeData(dataset));
-
-      // Plot graph when all files are processed
-      if (++filesProcessed === files.length) {
-        plotGraph(ctx, datasets, startDate, endDate);
-      }
-    };
-    reader.readAsArrayBuffer(file);
-  }
-
-  // Read and process each file
-  for (let file of files) {
-    processFile(file);
-  }
-}
-
-// Listen for file input change
-document.getElementById('fileInput').addEventListener('change', function(event) {
-  processData(event.target.files);
+// Get the selected file when input changes
+document.getElementById("sleepFile").addEventListener("change", (event) => {
+  sleepFile = event.target.files[0]; // selecting the file
 });
+
+// Handle upload button click
+document.getElementById("upload-button").addEventListener("click", (e) => {
+  e.preventDefault();
+  let fileReader = new FileReader();
+
+  // Read the selected file as binary string
+  fileReader.readAsBinaryString(sleepFile);
+
+  // Process the file data when it's loaded
+  fileReader.onload = (event) => {
+    let fileData = event.target.result;
+
+    // Read the Excel workbook
+    let workbook = XLSX.read(
+      fileData,
+      { type: "binary" },
+      { dateNF: "mm/dd/yyyy" }
+    );
+
+    var light = [];
+    var rem = [];
+    var deep = [];
+    var total = [];
+    var efficiency = [];
+
+    // Change each sheet in the workbook to json
+    workbook.SheetNames.forEach(async (sheet) => {
+      const result = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+        raw: false,
+      });
+
+      for(var i = 0; i < result.length; i++){
+        light.push(result[i].light);
+        rem.push(result[i].rem);
+        deep.push(result[i].deep);
+        total.push(result[i].total)
+        efficiency.push(result[i].efficiency);
+      }
+        
+      console.log("Light sleep data :"+ `\n` + light);
+      console.log("Rem sleep data :"+ `\n` + rem);
+      console.log("Deep sleep data :"+ `\n` + deep);
+      console.log("Total sleep data :"+ `\n` + total);
+      console.log("Efficiency data :"+`\n` + efficiency);
+     
+    
+      console.log(result);
+    });
+  };
+});
+let activityFile;
+    document.getElementById("activityFile").addEventListener("change", (event) => {
+      activityFile = event.target.files[0]; // selecting the file
+    });
+    
+    document.getElementById("upload-button").addEventListener("click", (e) => {
+      e.preventDefault();
+      let fileReader2 = new FileReader();
+    
+      // Read the selected file as binary string
+      fileReader2.readAsBinaryString(activityFile);
+    
+      // Process the file data when it's loaded
+      fileReader2.onload = (event) => {
+        let fileData2 = event.target.result;
+    
+        // Read the Excel workbook
+        let workbook = XLSX.read(
+          fileData2,
+          { type: "binary" },
+          { dateNF: "mm/dd/yyyy" }
+        );
+    
+        var steps = [];
+    
+        // Change each sheet in the workbook to json
+        workbook.SheetNames.forEach(async (sheet) => {
+          const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+            raw: false,
+          });
+    
+          for(var i = 0; i < result2.length; i++){
+            steps.push(result2[i].steps)
+          }
+            
+          console.log("Total step data :"+ `\n` + steps);
+         
+          
+    
+    
+          console.log(result2);
+        });
+      };
+    });
+
+function setup(){
+  var canvas = createCanvas(windowWidth, windowHeight);
+  canvas.parent("sketch1");
+  frameRate(60);
+}
+
+function draw(){
+  
+}
+
+function windowResized(){
+  resizeCanvas(windowWidth, windowHeight);
+}
