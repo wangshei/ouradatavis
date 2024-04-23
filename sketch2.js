@@ -232,7 +232,7 @@ function draw(){
       //console.log(heaviest + ","+ heaviest-lightest);
       for (var i = lightest; i<=heaviest;i+=1){
         var ypos = map(i, lightest, heaviest,ybottom,ytop )
-        text("- "+i+" lb",xbottom+5,ypos); // this is the only thing that will change style
+        text("- "+i+" lb",xbottom+10,ypos); // this is the only thing that will change style
       }
 
       for (var i = 0; i<summary_date.length; i++){
@@ -309,10 +309,10 @@ function draw(){
 
     fill(0);
 
-    line(xtop,ybottom,xbottom+5,ybottom);
+    line(xtop,ybottom,xbottom+10,ybottom);
     // y index
     line(xtop,ytop-5,xtop,ybottom);
-    line(xbottom+5,ytop-5,xbottom+5,ybottom);
+    line(xbottom+10,ytop-5,xbottom+10,ybottom);
 
     stroke(255);
 
