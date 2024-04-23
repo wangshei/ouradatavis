@@ -328,15 +328,14 @@ function draw() {
     text(i / 10, 60, y); // Label the hash mark
   }
 
-  // Draw sleep summary dates
-  for (var i = 0; i < sleepsummarydate.length; i++) {
-    if (i % 2 == 0) {
-      push();
-      translate(65 + i * bar_width + bar_width / 2, ybottom);
-      rotate(HALF_PI / 2);
-      text(sleepsummarydate[i], 0, 0);
-      pop();
-    }
+  // Draw date labels horizontally with rotation
+  // Draw date labels horizontally without rotation
+  textAlign(CENTER, CENTER);
+  let labelSpacing = Math.ceil(sleepsummarydate.length / 5); // Spacing between date labels
+  for (let i = 0; i < sleepsummarydate.length; i += labelSpacing) {
+    let x = map(i, 0, sleepsummarydate.length - 1, 65, 865); // Calculate x-coordinate for each date label
+    let y = ybottom + 20; // Adjust vertical position
+    text(sleepsummarydate[i], x, y); // Display the date label
   }
 
   // Draw lines connecting sleep score data points
