@@ -192,7 +192,7 @@ function draw(){
       
     for (var i = 0; i<day_weight.length; i++){
 
-      stroke(184,183,242);
+      stroke(67,1,89);
 
 
       calories_x1 = xtop + 5+ bar_width*[i];
@@ -212,7 +212,7 @@ function draw(){
       line(calories_x1,calories_y1, calories_x2, calories_y2);
       //console.log(`Drawing line at index ${i}: xPos=${calories_x1}, yPos=${calories_y1}, xPos2=${calories_x2}, height=${calories_y2}`);
 
-      stroke(220,220,220);
+      stroke(255,226,237);
 
        weight_x1 = xtop + 5+ bar_width*[i];
       // console.log(weight_lbs[i] + " is weight right now");
