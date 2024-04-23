@@ -25,6 +25,9 @@
 #activity-graph{
     display:none;
 }
+#weight-graph{
+    display:none;
+}
 #overview-insights{
     display:block;
 }
@@ -37,6 +40,9 @@
     display:none;
 }
 
+#weight-insights{
+    display:none;
+}
 #overview-key{
     display:block;
 }
@@ -49,6 +55,11 @@
     display:none;
 }
 
+#weight-key{
+    display:none;
+}
+
+
 #key-section{
     position:relative;
 }
@@ -57,6 +68,13 @@
     position:absolute;
     
 }
+.graph-half{
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    z-index:0;
+}
+
 
 
 .key-section{
