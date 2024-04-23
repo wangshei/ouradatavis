@@ -384,7 +384,7 @@ function draw(){
     line(xtop,ybottom,xbottom+10,ybottom);
     // y index
     line(xtop,ytop-5,xtop,ybottom);
-    line(xbottom+10,ytop-5,xbottom+10,ybottom);
+    line(xbottom,ytop-5,xbottom,ybottom);
 
     stroke(255);
 

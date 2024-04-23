@@ -1,13 +1,13 @@
-// let sleepFile;
-// let activityFile;
-// let weightFile;
-// let readinessFile;
-// let sleepDataProcessed = false;
-// let activityDataProcessed = false;
-// let weightDataProcess = false;
-// let readinessDataProcess = false;
-// let xPositions = [];
-// let bar_width = 14.75;
+let sleepFile;
+let activityFile;
+let weightFile;
+let readinessFile;
+let sleepDataProcessed = false;
+let activityDataProcessed = false;
+let weightDataProcess = false;
+let readinessDataProcess = false;
+let xPositions = [];
+let bar_width;
 
 // // Get the selected file when input changes
 // document.getElementById("sleepFile").addEventListener("change", (event) => {
@@ -289,38 +289,42 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
 });
 
 
-// function checkDataProcessed() {
-//   if (sleepDataProcessed && activityDataProcessed) {
-//   }
-//   if (!sleepDataProcessed && !activityDataProcessed) {
-//   }
-//   if (!sleepDataProcessed && activityDataProcessed) {
-//   }
-// }
-
-
-function setup(){
-  divWidth = document.getElementById('overview-graph').clientWidth;
-  divHeight = document.getElementById('overview-graph').clientHeight;
- console.log(divWidth + ", " + divHeight);
-
- var weightCanvas = createCanvas(divWidth, divHeight);
- weightCanvas.parent("overview-graph");
-
-
+function checkDataProcessed() {
+  if (sleepDataProcessed && activityDataProcessed) {
+  }
+  if (!sleepDataProcessed && !activityDataProcessed) {
+  }
+  if (!sleepDataProcessed && activityDataProcessed) {
+  }
 }
+
+function setup() {
+  var canvas = createCanvas(windowWidth, windowHeight);
+  canvas.parent("sketch1");
+  frameRate(60);
+}
+
+xtop = 65;
+ytop = 65;
+xbottom = 865;
+ybottom = 508;
+ graphheight = ybottom-ytop;
+divWidth;
+divHeight;
 
 function draw() {
   noStroke();
   stroke(0);
   fill(0);
 
+  bar_width = (xbottom-xtop)/activitysummarydate.length;
+
   textAlign(LEFT, CENTER);
 
   // Draw hash marks and labels on the y-axis
   for (let i = 0; i <= 10; i++) {
     
-    let y = map(i / 10, 0, 1, height - 50, 50); // Calculate y-coordinate for each hash mark
+    let y = map(i / 10, 0, 1, graphheight, xtop-15); // Calculate y-coordinate for each hash mark
     line(60, y, 65, y); // Draw the hash mark
     textAlign(RIGHT, CENTER);
     noStroke();
@@ -331,7 +335,7 @@ function draw() {
   for (var i = 0; i < sleepsummarydate.length; i++) {
     if (i % 2 == 0) {
       push();
-      translate(65 + i * bar_width + bar_width / 2, height - 10);
+      translate(65 + i * bar_width + bar_width / 2, ybottom);
       rotate(HALF_PI / 2);
       text(sleepsummarydate[i], 0, 0);
       pop();
@@ -342,9 +346,9 @@ function draw() {
   stroke(64, 119, 27);
   for (let i = 0; i < sleepsummarydate.length - 1; i++) {
     let x1 = xPositions[i];
-    let y1 = map(sleepscore[i], 0, 100, height - 50, 50);
+    let y1 = -sleepscore[i]/100*ybottom+ybottom;
     let x2 = xPositions[i + 1];
-    let y2 = map(sleepscore[i + 1], 0, 100, height - 50, 50);
+    let y2 = -sleepscore[i + 1]/100*ybottom+ybottom;
     line(x1, y1, x2, y2);
   }
 
@@ -352,9 +356,9 @@ function draw() {
   stroke(134, 77, 191); // Change color to red
   for (let i = 0; i < activitysummarydate.length - 1; i++) {
     let x1 = xPositions[i];
-    let y1 = map(activityscore[i], 0, 100, height - 50, 50);
+    let y1 = -activityscore[i]/100*ybottom+ybottom;
     let x2 = xPositions[i + 1];
-    let y2 = map(activityscore[i + 1], 0, 100, height - 50, 50);
+    let y2 = -activityscore[i + 1]/100*ybottom+ybottom;
     line(x1, y1, x2, y2);
   }
 
@@ -362,9 +366,9 @@ function draw() {
   stroke(0, 164, 186); // Change color to green
   for (let i = 0; i < weightsummarydate.length - 1; i++) {
     let x1 = xPositions[i];
-    let y1 = map(normalizedWeightScores[i], 0, 1, height - 50, 50);
+    let y1 =-normalizedWeightScores[i]*ybottom+ybottom;
     let x2 = xPositions[i + 1];
-    let y2 = map(normalizedWeightScores[i + 1], 0, 1, height - 50, 50);
+    let y2 = -normalizedWeightScores[i + 1]*ybottom+ybottom;
     line(x1, y1, x2, y2);
   }
 
@@ -372,9 +376,9 @@ function draw() {
   stroke(211, 100, 100); // Change color to purple
   for (let i = 0; i < readinesssummarydate.length - 1; i++) {
     let x1 = xPositions[i];
-    let y1 = map(normalizedReadinessScores[i], 0, 1, height - 50, 50);
+    let y1 = -normalizedReadinessScores[i]* ybottom +ybottom;
     let x2 = xPositions[i + 1];
-    let y2 = map(normalizedReadinessScores[i + 1], 0, 1, height - 50, 50);
+    let y2 = -normalizedReadinessScores[i + 1]*ybottom+ybottom;
     line(x1, y1, x2, y2);
   }
 
@@ -385,7 +389,7 @@ function draw() {
     fill(255, 255, 255);
 
     var xpos = xPositions[i];
-    var ypos = map(sleepscore[i], 0, 100, height - 50, 50);
+    var ypos = -sleepscore[i]/100*ybottom+ybottom;
     circle(xpos, ypos, 4);
   }
 
@@ -395,7 +399,7 @@ function draw() {
     fill(255, 255, 255); // Set fill color to white
 
     var xpos = xPositions[i];
-    var ypos = map(activityscore[i], 0, 100, height - 50, 50);
+    var ypos = -activityscore[i]/100*ybottom+ybottom;
     circle(xpos, ypos, 4); // Draw a circle at the activity score data point
   }
 
@@ -405,7 +409,7 @@ function draw() {
     fill(255, 255, 255); // Set fill color to white
 
     var xpos = xPositions[i];
-    var ypos = map(normalizedWeightScores[i], 0, 1, height - 50, 50);
+    var ypos = -normalizedWeightScores[i]*ybottom+ybottom;
     circle(xpos, ypos, 4); // Draw a circle at the normalized weight score data point
   }
 
@@ -415,20 +419,20 @@ function draw() {
     fill(255, 255, 255); // Set fill color to white
 
     var xpos = xPositions[i];
-    var ypos = map(normalizedReadinessScores[i], 0, 1, height - 50, 50);
+    var ypos = -normalizedReadinessScores[i]* ybottom+ybottom;
     circle(xpos, ypos, 4); // Draw a circle at the normalized readiness score data point
   }
 
   // Draw axes
   stroke(0);
   fill(0);
-  line(65, 765, 865, 765); // x-axis
-  line(65, 50, 65, 765); // y-axis
+  line(xtop, ybottom, xbottom, ybottom); // x-axis
+  line(xtop, ytop, xtop, ybottom); // y-axis
   noStroke(0);
   textAlign(CENTER, CENTER);
-  text("score", 65, 20); // y-axis label
+  text("score", xtop, 20); // y-axis label
   textAlign(LEFT, CENTER);
-  text("Date", 875, 765); // x-axis label
+  text("Date", xbottom, ybottom); // x-axis label
 }
 
 function windowResized() {
