@@ -28,45 +28,61 @@ let bar_width;
 
 // // set up arrays to be populated
 
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Load data from local storage
   function loadData() {
-      const defaultData = { light: [], rem: [], deep: [], total: [], onset_latency: [], summary_date: [], efficiency: [], insights: [] };
-      sleep = JSON.parse(localStorage.getItem('sleepData')) || defaultData;
-      activity = JSON.parse(localStorage.getItem('activityData')) || { summary_date: [], cal_active: [], steps: [], insights: [] };
-      weight = JSON.parse(localStorage.getItem('weightData')) || { weight_lbs: [], day_weight: [] };
-      readiness = JSON.parse(localStorage.getItem('readinessData')) || { summary_date: [], score: [], insights: [] };
+    const defaultData = {
+      light: [],
+      rem: [],
+      deep: [],
+      total: [],
+      onset_latency: [],
+      summary_date: [],
+      efficiency: [],
+      insights: [],
+    };
+    sleep = JSON.parse(localStorage.getItem("sleepData")) || defaultData;
+    activity = JSON.parse(localStorage.getItem("activityData")) || {
+      summary_date: [],
+      cal_active: [],
+      steps: [],
+      insights: [],
+    };
+    weight = JSON.parse(localStorage.getItem("weightData")) || {
+      weight_lbs: [],
+      day_weight: [],
+    };
+    readiness = JSON.parse(localStorage.getItem("readinessData")) || {
+      summary_date: [],
+      score: [],
+      insights: [],
+    };
   }
 
   // Function to update the DOM with insights
   function displayInsights() {
-      updateInsights('sleep', sleep.insights);
-      updateInsights('activity', activity.insights);
-      updateInsights('readiness', readiness.insights);
+    updateInsights("sleep", sleep.insights);
+    updateInsights("activity", activity.insights);
+    updateInsights("readiness", readiness.insights);
   }
 
   // Initialize the application
   loadData();
 
-  
-sleepscore = sleep.sleepscore;
-sleepsummarydate = sleep.sleepsummarydate;
+  sleepscore = sleep.sleepscore;
+  sleepsummarydate = sleep.sleepsummarydate;
 
-activityscore = activity.activityscore;
-activitysummarydate = activity.activitysummarydate;
+  activityscore = activity.activityscore;
+  activitysummarydate = activity.activitysummarydate;
 
-weightscore = weight.weightscore;
-weightsummarydate = weight.weightsummarydate;
-normalizedWeightScores = weight.normalizedWeightScores;
+  weightscore = weight.weightscore;
+  weightsummarydate = weight.weightsummarydate;
+  normalizedWeightScores = weight.normalizedWeightScores;
 
-readinessscore = [];
-readinesssummarydate = [];
-normalizedreadinessScores = [];
-})
-
-
-
+  readinessscore = [];
+  readinesssummarydate = [];
+  normalizedreadinessScores = [];
+});
 
 // var earliest = Infinity;
 // var latest = 0;
@@ -181,8 +197,6 @@ normalizedreadinessScores = [];
 //   };
 // });
 
-
-
 // //weight
 
 // document.getElementById("upload-button").addEventListener("click", (e) => {
@@ -234,9 +248,6 @@ normalizedreadinessScores = [];
 //   };
 // });
 
-
-
-
 // //readiness
 
 document.getElementById("upload-button").addEventListener("click", (e) => {
@@ -278,7 +289,8 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
         // Normalize the weight score data from 0 to 1 and assign to normalizedWeightScores
         normalizedReadinessScores = readinessscore.map(
           (score) =>
-            (score - minReadinessScore) / (maxReadinessScore - minReadinessScore)
+            (score - minReadinessScore) /
+            (maxReadinessScore - minReadinessScore)
         );
 
         ReadinessDataProcessed = true;
@@ -287,7 +299,6 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
     });
   };
 });
-
 
 function checkDataProcessed() {
   if (sleepDataProcessed && activityDataProcessed) {
@@ -308,7 +319,7 @@ xtop = 65;
 ytop = 65;
 xbottom = 865;
 ybottom = 508;
- graphheight = ybottom-ytop;
+graphheight = ybottom - ytop;
 divWidth;
 divHeight;
 
@@ -317,14 +328,13 @@ function draw() {
   stroke(0);
   fill(0);
 
-  bar_width = (xbottom-xtop)/activitysummarydate.length;
+  bar_width = (xbottom - xtop) / activitysummarydate.length;
 
   textAlign(LEFT, CENTER);
 
   // Draw hash marks and labels on the y-axis
   for (let i = 0; i <= 10; i++) {
-    
-    let y = map(i / 10, 0, 1, graphheight, xtop-15); // Calculate y-coordinate for each hash mark
+    let y = map(i / 10, 0, 1, graphheight, xtop - 15); // Calculate y-coordinate for each hash mark
     line(60, y, 65, y); // Draw the hash mark
     textAlign(RIGHT, CENTER);
     noStroke();
@@ -346,9 +356,9 @@ function draw() {
   stroke(64, 119, 27);
   for (let i = 0; i < sleepsummarydate.length - 1; i++) {
     let x1 = xPositions[i];
-    let y1 = -sleepscore[i]/100*ybottom+ybottom;
+    let y1 = (-sleepscore[i] / 100) * ybottom + ybottom;
     let x2 = xPositions[i + 1];
-    let y2 = -sleepscore[i + 1]/100*ybottom+ybottom;
+    let y2 = (-sleepscore[i + 1] / 100) * ybottom + ybottom;
     line(x1, y1, x2, y2);
   }
 
@@ -356,9 +366,9 @@ function draw() {
   stroke(134, 77, 191); // Change color to red
   for (let i = 0; i < activitysummarydate.length - 1; i++) {
     let x1 = xPositions[i];
-    let y1 = -activityscore[i]/100*ybottom+ybottom;
+    let y1 = (-activityscore[i] / 100) * ybottom + ybottom;
     let x2 = xPositions[i + 1];
-    let y2 = -activityscore[i + 1]/100*ybottom+ybottom;
+    let y2 = (-activityscore[i + 1] / 100) * ybottom + ybottom;
     line(x1, y1, x2, y2);
   }
 
@@ -366,9 +376,9 @@ function draw() {
   stroke(0, 164, 186); // Change color to green
   for (let i = 0; i < weightsummarydate.length - 1; i++) {
     let x1 = xPositions[i];
-    let y1 =-normalizedWeightScores[i]*ybottom+ybottom;
+    let y1 = -normalizedWeightScores[i] * ybottom + ybottom;
     let x2 = xPositions[i + 1];
-    let y2 = -normalizedWeightScores[i + 1]*ybottom+ybottom;
+    let y2 = -normalizedWeightScores[i + 1] * ybottom + ybottom;
     line(x1, y1, x2, y2);
   }
 
@@ -376,12 +386,11 @@ function draw() {
   stroke(211, 100, 100); // Change color to purple
   for (let i = 0; i < readinesssummarydate.length - 1; i++) {
     let x1 = xPositions[i];
-    let y1 = -normalizedReadinessScores[i]* ybottom +ybottom;
+    let y1 = -normalizedReadinessScores[i] * ybottom + ybottom;
     let x2 = xPositions[i + 1];
-    let y2 = -normalizedReadinessScores[i + 1]*ybottom+ybottom;
+    let y2 = -normalizedReadinessScores[i + 1] * ybottom + ybottom;
     line(x1, y1, x2, y2);
   }
-
 
   // Draw circles at each sleep score data point
   for (var i = 0; i < sleepsummarydate.length; i++) {
@@ -389,7 +398,7 @@ function draw() {
     fill(255, 255, 255);
 
     var xpos = xPositions[i];
-    var ypos = -sleepscore[i]/100*ybottom+ybottom;
+    var ypos = (-sleepscore[i] / 100) * ybottom + ybottom;
     circle(xpos, ypos, 4);
   }
 
@@ -399,7 +408,7 @@ function draw() {
     fill(255, 255, 255); // Set fill color to white
 
     var xpos = xPositions[i];
-    var ypos = -activityscore[i]/100*ybottom+ybottom;
+    var ypos = (-activityscore[i] / 100) * ybottom + ybottom;
     circle(xpos, ypos, 4); // Draw a circle at the activity score data point
   }
 
@@ -409,17 +418,17 @@ function draw() {
     fill(255, 255, 255); // Set fill color to white
 
     var xpos = xPositions[i];
-    var ypos = -normalizedWeightScores[i]*ybottom+ybottom;
+    var ypos = -normalizedWeightScores[i] * ybottom + ybottom;
     circle(xpos, ypos, 4); // Draw a circle at the normalized weight score data point
   }
 
-   // Draw circles at each readiness score data point
-   for (var i = 0; i < readinesssummarydate.length; i++) {
+  // Draw circles at each readiness score data point
+  for (var i = 0; i < readinesssummarydate.length; i++) {
     stroke(0);
     fill(255, 255, 255); // Set fill color to white
 
     var xpos = xPositions[i];
-    var ypos = -normalizedReadinessScores[i]* ybottom+ybottom;
+    var ypos = -normalizedReadinessScores[i] * ybottom + ybottom;
     circle(xpos, ypos, 4); // Draw a circle at the normalized readiness score data point
   }
 
@@ -438,4 +447,3 @@ function draw() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
-
