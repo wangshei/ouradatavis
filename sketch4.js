@@ -2,7 +2,7 @@ let sleepFile;
 let sleepDataProcessed = false;
 let activityDataProcessed = false;
 let xPositions = [];
-let bar_width = 14.7;
+let bar_width = 14.75;
 
 // Get the selected file when input changes
 document.getElementById("sleepFile").addEventListener("change", (event) => {
