@@ -22,6 +22,8 @@ let longest;
 let heaviest;
 let lightest;
 
+
+
 // Handle upload button click
 document.getElementById("upload-button").addEventListener("click", (e) => {
   e.preventDefault();
@@ -67,19 +69,7 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
             //console.log(longest + "is longest");
           }
         }
-        lightest = 1000;
-        heaviest = 0;
-        for(var i = 0; i <= weight_lbs.length; i++){
-          var t = float(weight_lbs[i]);
-          if (t>heaviest){
-            heaviest = t;
-            console.log(heaviest + "is heaviest");
-          }
-          if (t<lightest){
-            lightest = t;
-            console.log(lightest + "is lightest");
-          }
-        }
+        
         
                 
       console.log("Light sleep data :"+ `\n` + light);
@@ -147,7 +137,19 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
         weightDataProcessed = true;
         console.log("weightDataProcessed =" + weightDataProcessed);
         checkDataProcessed()
-
+        lightest = 1000;
+        heaviest = 0;
+        for(var i = 0; i <= weight_lbs.length; i++){
+          var t = float(weight_lbs[i]);
+          if (t>heaviest){
+            heaviest = t;
+            console.log(heaviest + "is heaviest");
+          }
+          if (t<lightest){
+            lightest = t;
+            console.log(lightest + "is lightest");
+          }
+        }
       }
 
     });
@@ -194,8 +196,14 @@ function setup(){
 }
 
 
+let graphheight = 458;
+let xtop = 65;
+let ytop = 50;
+let xbottom = 870
+let ybottom = 508;
+
 function draw(){
-  console.log("Draw function is running."); // Check how often this logs
+  //console.log("Draw function is running."); // Check how often this logs
 
     //x index
     //background(255);
@@ -212,21 +220,21 @@ function draw(){
 
       //console.log(longest + ","+ longest/3600);
       for (var i = 0; i<=longest;i+=3600){
-        var ypos = map(i, 0, longest,508,50 )
+        var ypos = map(i, 0, longest,ybottom,ytop )
         text(i/3600+" hour",60,ypos); // this is the only thing that will change style
       }
       textAlign(LEFT, CENTER);
 
-      console.log(heaviest + ","+ heaviest-lightest);
+      //console.log(heaviest + ","+ heaviest-lightest);
       for (var i = lightest; i<=heaviest;i+=1){
-        var ypos = map(i, lightest, heaviest,580,50 )
-        text(i+" lb",870,ypos); // this is the only thing that will change style
+        var ypos = map(i, lightest, heaviest,ybottom,ytop )
+        text(i+" lb",xbottom+10,ypos); // this is the only thing that will change style
       }
 
       for (var i = 0; i<summary_date.length; i++){
        if (i%2==0){
         push();
-        translate(68 + i * bar_width+10, 512);
+        translate(xtop + i * bar_width+10, ybottom+5);
         rotate(HALF_PI/2); // default is radiants
         text(summary_date[i],0,0);
         //console.log(summary_date[i]);
@@ -241,22 +249,22 @@ function draw(){
       fill(220,220,220);
 
       let barHeight = onset_latency[i] / 90;
-      let yPos = 508 - barHeight-1;
-      let xPos = 70 + i * bar_width;
+      let yPos = ybottom - barHeight-1;
+      let xPos = xtop + 5 + i * bar_width;
       rect(xPos, yPos, bar_width, barHeight);
       //console.log(`Drawing latency at index ${i}: xPos=${xPos}, yPos=${yPos}, bar_width=${bar_width}, height=${barHeight}`);
 
       fill(224,227,255);      
       let barHeight2 = light[i] / 90;
       let yPos2 = yPos - barHeight2-1;
-      let xPos2 = 70 + i * bar_width+1;
+      let xPos2 = xtop + 5 + i * bar_width+1;
       rect(xPos2, yPos2, bar_width, barHeight2);
       //console.log(`Drawing light at index ${i}: xPos=${xPos2}, yPos=${yPos2}, bar_width=${bar_width}, height=${barHeight2}`);
       
       fill(207,207,245);
       let barHeight3 = rem[i] / 90;
       let yPos3 = yPos2 - barHeight3;
-      let xPos3 = 70 + i * bar_width+1;
+      let xPos3 = xtop + 5 + i * bar_width+1;
       rect(xPos3, yPos3, bar_width, barHeight3);
       //console.log(`Drawing light at index ${i}: xPos=${xPos3}, yPos=${yPos3}, bar_width=${bar_width}, height=${barHeight3}`);
 
@@ -265,16 +273,22 @@ function draw(){
 
       let barHeight4 = deep[i] / 90;
       let yPos4 = yPos3 - barHeight4;
-      let xPos4 = 70 + i * bar_width+1;
+      let xPos4 = xtop + 5 + i * bar_width+1;
       rect(xPos4, yPos4, bar_width, barHeight4);
       //console.log(`Drawing light at index ${i}: xPos=${xPos4}, yPos=${yPos4}, bar_width=${bar_width}, height=${barHeight4}`);
       
       stroke(0);
 
-      let weight_x1 = 70+ bar_width*[i];
-      let weight_y1 = (weight_lbs[i]-lightest)*(-20)+508;
-      let weight_x2 = 70+ bar_width*[i+1];
-      let weight_y2 = (weight_lbs[i+1]-lightest)*(-20)+508;
+      let weight_x1 = xtop + 5+ bar_width*[i];
+      console.log(weight_lbs[i] + " is weight right now");
+      console.log(lightest + " is the lightest weight");
+      console.log(heaviest + " is the heaviest")
+      console.log(graphheight + " is graphheight")
+      console.log(ybottom + "is ybottom")
+      let weight_y1 = (-(weight_lbs[i]-lightest)/(heaviest-lightest))*graphheight+ybottom;
+      let weight_x2 = xtop + 5+ bar_width*[i+1];
+      let weight_y2 = (-(weight_lbs[i+1]-lightest)/(heaviest-lightest))*graphheight+ybottom;
+      console.log(weight_y1, weight_y2)
       line(weight_x1,weight_y1, weight_x2, weight_y2);
       //console.log(`Drawing line at index ${i}: xPos=${weight_x1}, yPos=${weight_y1}, xPos2=${weight_x2}, height=${weight_y2}`);
 
@@ -285,22 +299,24 @@ function draw(){
   //}
   
 
+  
+
   stroke(0);
 
     fill(0);
 
-    line(65,508,870,508);
+    line(xtop,ybottom,xbottom,ybottom);
     // y index
-    line(65,50,65,508);
-    line(870,50,870,508);
+    line(xtop,ytop,xtop,ybottom);
+    line(xbottom,ytop,xbottom,ybottom);
 
     stroke(255);
 
     textAlign(CENTER, CENTER);
-    text("Duration", 65, 45);
+    text("Duration", xtop, xtop-20);
 
     textAlign(LEFT, CENTER);
-    text("Date", 875, 508);
+    //text("Day", 875, 508);
     
   }
 
