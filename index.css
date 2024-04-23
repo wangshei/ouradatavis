@@ -3,6 +3,29 @@
     flex-direction: column;
     gap:0;
 }
+.graph{
+    position: absolute;
+    border-radius: 40px;
+    padding:40px;
+    top: 0;
+    left: 0;
+    width: calc(100%  - 80px);
+    height: calc(100% - 80px);
+    background-color: #FFF;
+    z-index:0;
+}
+
+#overview-graph{
+    display:block;
+}
+
+#sleep-graph{
+    display:none;
+}
+
+#activity-graph{
+    display:none;
+}
 
 #header{
     width: calc(100%);
@@ -194,9 +217,10 @@ p{
 }
 
 #graph-section{
-    width: calc(60% - 48px);
+    width: calc(60% - 48px - 80px);
     gap: 40px;
     align-self: stretch;
+    position:relative;
 
 }
 
