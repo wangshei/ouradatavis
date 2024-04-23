@@ -350,10 +350,10 @@ function draw(){
     stroke(255);
 
     textAlign(CENTER, CENTER);
-    text("Duration", xtop, xtop-30);
+    text("Duration", xtop, ytop-20);
 
-    textAlign(LEFT, CENTER);
-    //text("Day", 875, 508);
+    textAlign(CENTER, CENTER);
+    text("Weight", xbottom, ytop-20);
     
   }
 
