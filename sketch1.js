@@ -112,8 +112,8 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
 
       if (activityFile) {
         for (var i = 0; i < result2.length; i++) {
-          activitysummarydate.push(result2[i].summary_date);
           activityscore.push(result2[i].score);
+          activitysummarydate.push(result2[i].summary_date);
         }
         // Normalize the activity score data from 0 to 1
         let minActivityScore = Math.min(...activityscore);
