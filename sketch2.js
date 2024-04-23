@@ -178,8 +178,8 @@ let duration;
 duration = "total";
 let latency_height;
 
-let xtop = 65;
-let ytop = 65;
+let xtop = 50;
+let ytop = 40;
 let xbottom;
 let ybottom;
 let graphheight;
@@ -188,20 +188,24 @@ let divHeight;
 
 
 function setup(){
-   divWidth = document.getElementById('graph-section').clientWidth;
-   divHeight = document.getElementById('graph-section').clientHeight;
-  //console.log(divWidth + ", " + divHeight);
+  let divWidth = document.getElementById('graph-section').clientWidth;
+  let divHeight = document.getElementById('graph-section').clientHeight;
+  console.log(divWidth + ", " + divHeight);
 
  
 
   var canvas = createCanvas(divWidth, divHeight);
   canvas.parent("sleep-graph");
   
-  //console.log("Setup complete, summary_date.length:", summary_date.length);
+  console.log("Setup complete, summary_date.length:", summary_date.length);
   //noLoop();
   xbottom = divWidth-xtop;
   ybottom = divHeight-ytop;
   graphheight = ybottom-ytop;
+
+  console.log (xbottom + "is xbottom")
+  console.log (ybottom + "is ybottom")
+
   
   // if (summary_date.length>0){
   //   if (duration === "total"){
@@ -216,13 +220,13 @@ function setup(){
 
 
 function draw(){
-  divWidth = document.getElementById('sleep-insights').clientWidth;
-  divHeight = document.getElementById('sleep-insights').clientHeight;
+  divWidth = document.getElementById('sleep-graph').clientWidth;
+  divHeight = document.getElementById('sleep-graph').clientHeight;
   // console.log(sleep)
   //console.log(divWidth + ", " + divHeight);
 
   xbottom = divWidth-xtop;
-  ybottom = divHeight-ytop;
+  ybottom = divHeight-ytop+50;
   graphheight = ybottom-ytop;
   
   var light = sleep.light;
