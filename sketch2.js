@@ -183,15 +183,21 @@ let ytop = 65;
 let xbottom;
 let ybottom;
 let graphheight;
+let divWidth;
+let divHeight;
 
 
 function setup(){
-  var canvas = createCanvas(windowWidth, windowHeight);
+  let divWidth = document.getElementById('graph-section').clientWidth;
+  let divHeight = document.getElementById('graph-section').clientHeight;
+  console.log(divWidth + ", " + divHeight);
+
+  var canvas = createCanvas(divWidth, divHeight);
   canvas.parent("sleep-graph");
   console.log("Setup complete, summary_date.length:", summary_date.length);
   //noLoop();
-  xbottom = windowWidth-xtop;
-  ybottom = windowHeight-ytop;
+  xbottom = divWidth-xtop;
+  ybottom = divHeight-ytop;
   graphheight = ybottom-ytop;
   
   // if (summary_date.length>0){
@@ -208,6 +214,13 @@ function setup(){
 
 function draw(){
   // console.log(sleep)
+  divWidth = document.getElementById('sleep-graph').clientWidth;
+  divHeight = document.getElementById('sleep-graph').clientHeight;
+  console.log(divWidth + ", " + divHeight);
+
+  xbottom = divWidth-xtop;
+  ybottom = divHeight-ytop;
+  graphheight = ybottom-ytop;
   
   var light = sleep.light;
   var rem = sleep.rem;
@@ -243,7 +256,8 @@ function draw(){
   console.log("Draw function is running."); // Check how often this logs
 
     //x index
-    //background(255);
+    fill(255);
+    rect(0,0,divWidth, divHeight);
     
     //rect(0, 50, 150, 150);  // Should definitely be visible
 
@@ -283,7 +297,7 @@ function draw(){
       
     for (var i = 0; i<summary_date.length; i++){
       stroke(255);
-      fill(220,220,220);
+      fill(230, 232, 243);
 
       let barHeight = onset_latency[i] / ((longest-0)/graphheight);
       let yPos = ybottom - barHeight;

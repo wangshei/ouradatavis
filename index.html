@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="p5.min.js"></script>
     <script src="data.js"></script>
-		<!-- <script src="sketch1.js"></script> -->
-    
+		<script src="sketch1.js"></script>
     <script
     src="https://cdn.jsdelivr.net/npm/xlsx@0.16.8/dist/xlsx.full.min.js"
     integrity="sha256-Ic7HP804IrYks4vUqX1trFF1Nr33RjONeJESZnYxsOY="
@@ -63,26 +62,61 @@
         </div>
         <div id="content">
           <div class="tile" id="graph-section">
+            <div id="key-section">
+              <div id="overview-key" class="keys">Overview lol</div>
+              <div id="sleep-key" class="keys">
+                <div class="key-section">
+                  <div class="key" style="background-color: #E6E8F3;">Latency</div>
+                  <div class="key" style="background-color: #E0E3FF; ">Light Sleep</div>
+                  <div class="key" style="background-color: #A5A4C9;">REM</div>
+                  <div class="key" style="background-color: #1D1B77; color: white;">Deep Sleep</div>
+                  <div class="key">Weight</div>
+              </div>
+              </div>
+              <div id="activity-key" class="keys">activities lol</div>
+            </div>
             <div id="overview-graph" class="graph">Overview lol</div>
             <div id="sleep-graph" class="graph" data-src="sketch2.js"></div>
             <div id="activity-graph" class="graph">activities lol</div>
           </div>
           <div class="tile" id="insights-section">
-            <div class="title">Insights</div>
-            <div id="insights-content">
-              <div id="insight">
-                <img src="assets/warning.png" class="icon" />
-                <div id="insight-info">
-                  <p>Low Heart Rate and Low Average Breathing</p>
-                  <p2>Check their medicine intake</p2>
+            <div id="overview-insights" class="insights">
+              <div class="title">Insights</div>
+              <div id="insights-content">
+                <div id="insight">
+                  <img src="assets/warning.png" class="icon" />
+                  <div id="insight-info">
+                    <p>Overview</p>
+                    <p2>Check their medicine intake</p2>
+                  </div>
                 </div>
+                
               </div>
-              <div id="insight">
-                <img src="assets/warning.png" class="icon" />
-                <div id="insight-info">
-                  <p>Low Heart Rate and Low Average Breathing</p>
-                  <p2>Check their medicine intake</p2>
+            </div>
+            <div id="sleep-insights" class="insights">
+              <div class="title">Insights</div>
+              <div id="insights-content">
+                <div id="insight">
+                  <img src="assets/warning.png" class="icon" />
+                  <div id="insight-info">
+                    <p>Sleep</p>
+                    <p2>Check their medicine intake</p2>
+                  </div>
                 </div>
+                
+              </div>
+            </div>
+            <div id="activity-insights" class="insights">
+              <div class="title">Insights</div>
+              <div id="insights-content">
+                <div id="insight">
+                  <img src="assets/warning.png" class="icon" />
+                  <div id="insight-info">
+                    <p>Activity</p>
+                    <p2>Check their medicine intake</p2>
+                  </div>
+                </div>
+                
               </div>
             </div>
           </div>
@@ -163,6 +197,15 @@
       const overviewGraph = document.getElementById("overview-graph");
       const sleepGraph = document.getElementById("sleep-graph");
       const activityGraph = document.getElementById("activity-graph");
+
+      const overviewInsights = document.getElementById("overview-insights");
+      const sleepInsights = document.getElementById("sleep-insights");
+      const activityInsights = document.getElementById("activity-insights");
+
+      const overviewKey = document.getElementById("overview-key");
+      const sleepKey = document.getElementById("sleep-key");
+      const activityKey = document.getElementById("activity-key");
+
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
           tabs.forEach((t) => t.removeAttribute("id"));
@@ -172,14 +215,39 @@
             overviewGraph.style.display = "block";
             sleepGraph.style.display = "none";
             activityGraph.style.display = "none";
+
+            overviewInsights.style.display = "block";
+            sleepInsights.style.display = "none";
+            activityInsights.style.display = "none";
+
+            overviewKey.style.display = "block";
+            sleepKey.style.display = "none";
+            activityKey.style.display = "none";
           } else if (tab.innerHTML === "Sleep") {
             overviewGraph.style.display = "none";
             sleepGraph.style.display = "block";
             activityGraph.style.display = "none";
+
+            overviewInsights.style.display = "none";
+            sleepInsights.style.display = "block";
+            activityInsights.style.display = "none";
+
+            overviewKey.style.display = "none";
+            sleepKey.style.display = "block";
+            activityKey.style.display = "none";
+            
           } else if (tab.innerHTML === "Activity") {
             overviewGraph.style.display = "none";
             sleepGraph.style.display = "none";
             activityGraph.style.display = "block";
+
+            overviewInsights.style.display = "none";
+            sleepInsights.style.display = "none";
+            activityInsights.style.display = "block";
+
+            overviewKey.style.display = "none";
+            sleepKey.style.display = "none";
+            activityKey.style.display = "block";
           }
         });
       });
