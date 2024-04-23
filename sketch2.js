@@ -7,20 +7,39 @@
 //   sleepFile = event.target.files[0]; // selecting the file
 // });
 
-var light = sleep.light;
-var rem = sleep.rem;
-var deep = sleep.deep;
-var total = sleep.total;
-var onset_latency = sleep.onset_latency;
-var summary_date = sleep.summary_date;
 
-var weight_lbs = weight.weight_lbs;
-var day_weight = weight.day_weight;
+document.addEventListener('DOMContentLoaded', () => {
+  // Load data from local storage
+  function loadData() {
+      const defaultData = { light: [], rem: [], deep: [], total: [], onset_latency: [], summary_date: [], efficiency: [], insights: [] };
+      sleep = JSON.parse(localStorage.getItem('sleepData')) || defaultData;
+      activity = JSON.parse(localStorage.getItem('activityData')) || { summary_date: [], cal_active: [], steps: [], insights: [] };
+      weight = JSON.parse(localStorage.getItem('weightData')) || { weight_lbs: [], day_weight: [] };
+      readiness = JSON.parse(localStorage.getItem('readinessData')) || { summary_date: [], score: [], insights: [] };
+  }
 
- bar_width;
-let longest;
-let heaviest;
-let lightest;
+  // Function to update the DOM with insights
+  function displayInsights() {
+      updateInsights('sleep', sleep.insights);
+      updateInsights('activity', activity.insights);
+      updateInsights('readiness', readiness.insights);
+  }
+
+  // Initialize the application
+  loadData();
+  light = sleep.light;
+  rem = sleep.rem;
+ deep = sleep.deep;
+  total = sleep.total;
+  onset_latency = sleep.onset_latency;
+  summary_date = sleep.summary_date;
+
+  weight_lbs = weight.weight_lbs;
+day_weight = weight.day_weight;
+})
+
+
+
 
 
 
@@ -188,8 +207,8 @@ let divHeight;
 
 
 function setup(){
-  let divWidth = document.getElementById('graph-section').clientWidth;
-  let divHeight = document.getElementById('graph-section').clientHeight;
+  let divWidth = document.getElementById('sleep-graph').clientWidth;
+  let divHeight = document.getElementById('sleep-graph').clientHeight;
   console.log(divWidth + ", " + divHeight);
 
  
@@ -451,6 +470,9 @@ function draw(){
   
 }
 
-function windowResized(){
-  resizeCanvas(windowWidth, windowHeight);
-}
+  function windowResized(){
+    divWidth = document.getElementById('sleep-graph').clientWidth;
+    divHeight = document.getElementById('sleep-graph').clientHeight;
+    resizeCanvas(divWidth, divHeight);
+  }
+

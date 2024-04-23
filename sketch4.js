@@ -1,202 +1,231 @@
-let sleepFile;
-let sleepDataProcessed = false;
-let activityDataProcessed = false;
-let xPositions = [];
-let bar_width = 14.75;
+// let sleepFile;
+// let sleepDataProcessed = false;
+// let activityDataProcessed = false;
+// let xPositions = [];
+// let bar_width = 14.75;
  
 
-// Get the selected file when input changes
-document.getElementById("sleepFile").addEventListener("change", (event) => {
-  sleepFile = event.target.files[0]; // selecting the file
-});
+// // Get the selected file when input changes
+// document.getElementById("sleepFile").addEventListener("change", (event) => {
+//   sleepFile = event.target.files[0]; // selecting the file
+// });
 
-var light = [];
-var rem = [];
-var deep = [];
-var total = [];
-var efficiency = [];
-var summarydate = [];
 
-var steps = [];
-var day_steps = [];
+document.addEventListener('DOMContentLoaded', () => {
+  // Load data from local storage
+  function loadData() {
+      const defaultData = { light: [], rem: [], deep: [], total: [], onset_latency: [], summary_date: [], efficiency: [], insights: [] };
+      sleep = JSON.parse(localStorage.getItem('sleepData')) || defaultData;
+      activity = JSON.parse(localStorage.getItem('activityData')) || { summary_date: [], cal_active: [], steps: [], insights: [] };
+      weight = JSON.parse(localStorage.getItem('weightData')) || { weight_lbs: [], day_weight: [] };
+      readiness = JSON.parse(localStorage.getItem('readinessData')) || { summary_date: [], score: [], insights: [] };
+  }
 
-var earliest = Infinity; 
-var latest = 0;
+  // Function to update the DOM with insights
+  function displayInsights() {
+      updateInsights('sleep', sleep.insights);
+      updateInsights('activity', activity.insights);
+      updateInsights('readiness', readiness.insights);
+  }
 
-var minsteps = Infinity;
-var maxsteps = 0;
-//var high_efficiency;
-//var low_efficiency;
+  // Initialize the application
+  loadData();
 
-// Handle upload button click
-document.getElementById("upload-button").addEventListener("click", (e) => {
-  e.preventDefault();
-  let fileReader = new FileReader();
+  light = sleep.light;
+  rem = sleep.rem;
+  deep = sleep.deep;
+  total = sleep.total;
+  efficiency = sleep.efficiency;
+  summarydate = sleep.summary_date;
 
-  // Read the selected file as binary string
-  fileReader.readAsBinaryString(sleepFile);
+  steps = activity.steps;
+  day_steps = activity.summary_date;
 
-  // Process the file data when it's loaded
-  fileReader.onload = (event) => {
-    let fileData = event.target.result;
+  earliest = Infinity; 
+  latest = 0;
 
-    // Read the Excel workbook
-    let workbook = XLSX.read(
-      fileData,
-      { type: "binary" },
-      { dateNF: "mm/dd/yyyy" }
-    );
+  minsteps = Infinity;
+  maxsteps = 0;
+})
 
-    // Change each sheet in the workbook to json
-    workbook.SheetNames.forEach(async (sheet) => {
-      const result = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
-        raw: false,
-      });
 
-      if (sleepFile){
-        for(var i = 0; i < result.length; i++){
-          light.push(result[i].light);
-          rem.push(result[i].rem);
-          deep.push(result[i].deep);
-          total.push(result[i].total)
-          efficiency.push(result[i].efficiency);
-          summarydate.push(result[i].summary_date);
-        }
+// //var high_efficiency;
+// //var low_efficiency;
 
-            // Create dateTimestamps array
-      var dateTimestamps = summarydate.map(dateString => {
-      var parts = dateString.split('/');
-      var year = parseInt(parts[2]) + 2000; // Assuming the year is represented as two digits
-      var month = parseInt(parts[0]) - 1; // Months are 0-indexed in JavaScript
-      var day = parseInt(parts[1]);
-      return new Date(year, month, day).getTime(); // Convert to timestamp
-  });
+// // Handle upload button click
+// document.getElementById("upload-button").addEventListener("click", (e) => {
+//   e.preventDefault();
+//   let fileReader = new FileReader();
 
-        // Calculate earliest and latest timestamps
-    var latestTimeStamp = Math.max(...dateTimestamps);
-    console.log(latestTimeStamp);
-    var earliestTimeStamp = Math.min(...dateTimestamps);
-    console.log(earliestTimeStamp);
+//   // Read the selected file as binary string
+//   fileReader.readAsBinaryString(sleepFile);
+
+//   // Process the file data when it's loaded
+//   fileReader.onload = (event) => {
+//     let fileData = event.target.result;
+
+//     // Read the Excel workbook
+//     let workbook = XLSX.read(
+//       fileData,
+//       { type: "binary" },
+//       { dateNF: "mm/dd/yyyy" }
+//     );
+
+//     // Change each sheet in the workbook to json
+//     workbook.SheetNames.forEach(async (sheet) => {
+//       const result = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+//         raw: false,
+//       });
+
+//       if (sleepFile){
+//         for(var i = 0; i < result.length; i++){
+//           light.push(result[i].light);
+//           rem.push(result[i].rem);
+//           deep.push(result[i].deep);
+//           total.push(result[i].total)
+//           efficiency.push(result[i].efficiency);
+//           summarydate.push(result[i].summary_date);
+//         }
+
+//             // Create dateTimestamps array
+//       var dateTimestamps = summarydate.map(dateString => {
+//       var parts = dateString.split('/');
+//       var year = parseInt(parts[2]) + 2000; // Assuming the year is represented as two digits
+//       var month = parseInt(parts[0]) - 1; // Months are 0-indexed in JavaScript
+//       var day = parseInt(parts[1]);
+//       return new Date(year, month, day).getTime(); // Convert to timestamp
+//   });
+
+//         // Calculate earliest and latest timestamps
+//     var latestTimeStamp = Math.max(...dateTimestamps);
+//     console.log(latestTimeStamp);
+//     var earliestTimeStamp = Math.min(...dateTimestamps);
+//     console.log(earliestTimeStamp);
     
-    //var highestEfficiency = Math.max(...numberEfficiency);
-    //var lowestEfficiency = Math.min(...numberEfficiency);
+//     //var highestEfficiency = Math.max(...numberEfficiency);
+//     //var lowestEfficiency = Math.min(...numberEfficiency);
 
-    xPositions = dateTimestamps.map(timestamp => map(timestamp, earliestTimeStamp, latestTimeStamp, 65, 865));
-    /*  latest = 0;
-        earliest = Infinity;
-        for(var i=0; i < summarydate.length; i++) {
-          var t = float(summarydate[i]);
-          if (t < earliest){
-            earliest = t;
-          }
-          if (t > latest){
-            latest = t;
-          }
-      }*/
-      console.log("Light sleep data :"+ `\n` + light);
-      console.log("Rem sleep data :"+ `\n` + rem);
-      console.log("Deep sleep data :"+ `\n` + deep);
-      console.log("Total sleep data :"+ `\n` + total);
-      console.log("Efficiency data :"+`\n` + efficiency);
-      console.log("Summary date data :"+ `\n` + summarydate);
+//     xPositions = dateTimestamps.map(timestamp => map(timestamp, earliestTimeStamp, latestTimeStamp, 65, 865));
+//     /*  latest = 0;
+//         earliest = Infinity;
+//         for(var i=0; i < summarydate.length; i++) {
+//           var t = float(summarydate[i]);
+//           if (t < earliest){
+//             earliest = t;
+//           }
+//           if (t > latest){
+//             latest = t;
+//           }
+//       }*/
+//       console.log("Light sleep data :"+ `\n` + light);
+//       console.log("Rem sleep data :"+ `\n` + rem);
+//       console.log("Deep sleep data :"+ `\n` + deep);
+//       console.log("Total sleep data :"+ `\n` + total);
+//       console.log("Efficiency data :"+`\n` + efficiency);
+//       console.log("Summary date data :"+ `\n` + summarydate);
     
 
 
-      console.log(result);
-        sleepDataProcessed = true;
-        console.log("sleepDataProcessed =" + sleepDataProcessed);
-        checkDataProcessed()
+//       console.log(result);
+//         sleepDataProcessed = true;
+//         console.log("sleepDataProcessed =" + sleepDataProcessed);
+//         checkDataProcessed()
         
-      }
+//       }
 
 
-    });
-  };
-});
+//     });
+//   };
+// });
 
-let activityFile;
-    document.getElementById("activityFile").addEventListener("change", (event) => {
-      activityFile = event.target.files[0]; // selecting the file
-    });
+// let activityFile;
+//     document.getElementById("activityFile").addEventListener("change", (event) => {
+//       activityFile = event.target.files[0]; // selecting the file
+//     });
     
-    document.getElementById("upload-button").addEventListener("click", (e) => {
-      e.preventDefault();
-      let fileReader2 = new FileReader();
+//     document.getElementById("upload-button").addEventListener("click", (e) => {
+//       e.preventDefault();
+//       let fileReader2 = new FileReader();
     
-      // Read the selected file as binary string
-      fileReader2.readAsBinaryString(activityFile);
+//       // Read the selected file as binary string
+//       fileReader2.readAsBinaryString(activityFile);
     
-      // Process the file data when it's loaded
-      fileReader2.onload = (event) => {
-        let fileData2 = event.target.result;
+//       // Process the file data when it's loaded
+//       fileReader2.onload = (event) => {
+//         let fileData2 = event.target.result;
     
-        // Read the Excel workbook
-        let workbook = XLSX.read(
-          fileData2,
-          { type: "binary" },
-          { dateNF: "mm/dd/yyyy" }
-        );
+//         // Read the Excel workbook
+//         let workbook = XLSX.read(
+//           fileData2,
+//           { type: "binary" },
+//           { dateNF: "mm/dd/yyyy" }
+//         );
     
 
-        // Change each sheet in the workbook to json
-        workbook.SheetNames.forEach(async (sheet) => {
-          const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
-            raw: false,
-          });
+//         // Change each sheet in the workbook to json
+//         workbook.SheetNames.forEach(async (sheet) => {
+//           const result2 = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+//             raw: false,
+//           });
     
-        if (activityFile) {
-          for(var i = 0; i < result2.length; i++) {
-            day_steps.push(result2[i].summary_date);
-            steps.push(result2[i].steps);
-        }
+//         if (activityFile) {
+//           for(var i = 0; i < result2.length; i++) {
+//             day_steps.push(result2[i].summary_date);
+//             steps.push(result2[i].steps);
+//         }
 
-        console.log("Total step data :"+ `\n` + steps);
-        console.log("Day data :"+ `\n` + day_steps);
-      console.log(result2);
-        activityDataProcessed = true;
-        console.log("activityDataProcessed =" + activityDataProcessed);
-        checkDataProcessed()
-        minsteps = Infinity;
-        maxsteps = 0;
-        for (var i = 0; i < steps.length; i++) {
-          var t = float(steps[i]);
-          if (t>maxsteps){
-            maxsteps = t;
-            console.log(maxsteps + "is maxsteps");
-          }
-          if (t<minsteps){
-            minsteps = t;
-            console.log(minsteps + "is minsteps");
-          }
-         }
-        }
+//         console.log("Total step data :"+ `\n` + steps);
+//         console.log("Day data :"+ `\n` + day_steps);
+//       console.log(result2);
+//         activityDataProcessed = true;
+//         console.log("activityDataProcessed =" + activityDataProcessed);
+//         checkDataProcessed()
+//         minsteps = Infinity;
+//         maxsteps = 0;
+//         for (var i = 0; i < steps.length; i++) {
+//           var t = float(steps[i]);
+//           if (t>maxsteps){
+//             maxsteps = t;
+//             console.log(maxsteps + "is maxsteps");
+//           }
+//           if (t<minsteps){
+//             minsteps = t;
+//             console.log(minsteps + "is minsteps");
+//           }
+//          }
+//         }
             
          
-        });
-      };
-    });
+//         });
+//       };
+//     });
 
 
-function checkDataProcessed() {
-  if (sleepDataProcessed && activityDataProcessed) {
-    console.log("Data is processed, initializing p5 sketch...");
-  } 
-  if (!sleepDataProcessed && !activityDataProcessed){
-    console.log("No data is being processed");
+// function checkDataProcessed() {
+//   if (sleepDataProcessed && activityDataProcessed) {
+//     console.log("Data is processed, initializing p5 sketch...");
+//   } 
+//   if (!sleepDataProcessed && !activityDataProcessed){
+//     console.log("No data is being processed");
 
-  }
-  if (!sleepDataProcessed && activityDataProcessed){
-    console.log("Only activity data is being processed");
+//   }
+//   if (!sleepDataProcessed && activityDataProcessed){
+//     console.log("Only activity data is being processed");
 
-  }
-}
+//   }
+// }
 
 // im not sure what the let statements are for.
 
-
+let divWidth;
+let divHeight;
 function setup(){
-  var canvas = createCanvas(windowWidth, windowHeight);
-  canvas.parent("sketch4");
+  divWidth = document.getElementById('activity-graph').clientWidth;
+  divHeight = document.getElementById('activity-graph').clientHeight;
+  console.log(divWidth + ", " + divHeight);
+
+ var canvas = createCanvas(divWidth, divHeight);
+ canvas.parent("activity-graph");
   console.log("Setup complete, summarydate.length:", summarydate.length);
   frameRate(60);
 
@@ -336,3 +365,4 @@ let sleep= {
 }
 */
 }
+

@@ -6,57 +6,11 @@
 .graph{
     position: absolute;
     border-radius: 40px;
-    padding:20px;
-    top: 80px;
+    top: 100px;
     left: 0;
     width: calc(100%  - 80px);
-    height: calc(100% - 200px);
+    height: calc(100% - 100px);
     z-index:0;
-}
-
-#overview-graph{
-    display:block;
-}
-
-#sleep-graph{
-    display:none;
-}
-
-#activity-graph{
-    display:none;
-}
-#weight-graph{
-    display:none;
-}
-#overview-insights{
-    display:block;
-}
-
-#sleep-insights{
-    display:none;
-}
-
-#activity-insights{
-    display:none;
-}
-
-#weight-insights{
-    display:none;
-}
-#overview-key{
-    display:block;
-}
-
-#sleep-key{
-    display:none;
-}
-
-#activity-key{
-    display:none;
-}
-
-#weight-key{
-    display:none;
 }
 
 
@@ -65,16 +19,9 @@
 }
 
 .keys{
-    position:absolute;
+    
     
 }
-.graph-half{
-    position: absolute;
-    width: 50%;
-    height: 100%;
-    z-index:0;
-}
-
 
 
 .key-section{
@@ -120,6 +67,8 @@ h1{
 
 
 }
+
+
 
 .key{
     display: inline-flex;
@@ -308,6 +257,15 @@ p{
     line-height: normal;
 }
 
+#insights-section p{
+    font-size:15px;
+    font-style:normal;
+    font-weight:400px;
+    line-height:100%;
+    margin: 10px 0;
+    color:black;
+
+}
 
 .insights-content{
     display: flex;
