@@ -62,6 +62,19 @@
         </div>
         <div id="content">
           <div class="tile" id="graph-section">
+            <div id="key-section">
+              <div id="overview-key" class="keys">Overview lol</div>
+              <div id="sleep-key" class="keys">
+                <div class="key-section">
+                  <div class="key" style="background-color: #E6E8F3;">Latency</div>
+                  <div class="key" style="background-color: #E0E3FF; ">Light Sleep</div>
+                  <div class="key" style="background-color: #A5A4C9;">REM</div>
+                  <div class="key" style="background-color: #1D1B77; color: white;">Deep Sleep</div>
+                  <div class="key">Weight</div>
+              </div>
+              </div>
+              <div id="activity-key" class="keys">activities lol</div>
+            </div>
             <div id="overview-graph" class="graph">Overview lol</div>
             <div id="sleep-graph" class="graph" data-src="sketch2.js"></div>
             <div id="activity-graph" class="graph">activities lol</div>
@@ -184,9 +197,14 @@
       const overviewGraph = document.getElementById("overview-graph");
       const sleepGraph = document.getElementById("sleep-graph");
       const activityGraph = document.getElementById("activity-graph");
+
       const overviewInsights = document.getElementById("overview-insights");
       const sleepInsights = document.getElementById("sleep-insights");
       const activityInsights = document.getElementById("activity-insights");
+
+      const overviewKey = document.getElementById("overview-key");
+      const sleepKey = document.getElementById("sleep-key");
+      const activityKey = document.getElementById("activity-key");
 
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
@@ -201,6 +219,10 @@
             overviewInsights.style.display = "block";
             sleepInsights.style.display = "none";
             activityInsights.style.display = "none";
+
+            overviewKey.style.display = "block";
+            sleepKey.style.display = "none";
+            activityKey.style.display = "none";
           } else if (tab.innerHTML === "Sleep") {
             overviewGraph.style.display = "none";
             sleepGraph.style.display = "block";
@@ -209,6 +231,10 @@
             overviewInsights.style.display = "none";
             sleepInsights.style.display = "block";
             activityInsights.style.display = "none";
+
+            overviewKey.style.display = "none";
+            sleepKey.style.display = "block";
+            activityKey.style.display = "none";
             
           } else if (tab.innerHTML === "Activity") {
             overviewGraph.style.display = "none";
@@ -218,6 +244,10 @@
             overviewInsights.style.display = "none";
             sleepInsights.style.display = "none";
             activityInsights.style.display = "block";
+
+            overviewKey.style.display = "none";
+            sleepKey.style.display = "none";
+            activityKey.style.display = "block";
           }
         });
       });

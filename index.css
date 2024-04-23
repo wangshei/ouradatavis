@@ -6,12 +6,11 @@
 .graph{
     position: absolute;
     border-radius: 40px;
-    padding:40px;
-    top: 0;
+    padding:20px;
+    top: 80px;
     left: 0;
     width: calc(100%  - 80px);
-    height: calc(100% - 80px);
-    background-color: #FFF;
+    height: calc(100% - 200px);
     z-index:0;
 }
 
@@ -37,6 +36,30 @@
 #activity-insights{
     display:none;
 }
+
+#overview-key{
+    display:block;
+}
+
+#sleep-key{
+    display:none;
+}
+
+#activity-key{
+    display:none;
+}
+
+#key-section{
+    position:relative;
+}
+
+.key-section{
+    display:flex;
+    flex-direction:row;
+    gap: 8px;
+}
+
+
 
 #header{
     width: calc(100%);
@@ -73,6 +96,16 @@ h1{
 
 
 }
+
+.key{
+    display: inline-flex;
+    padding: 4px 12px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    border: 1px solid #000;
+}
+
 #main-content{
     height:100vh;
     display: inline-flex;
@@ -228,6 +261,8 @@ p{
 }
 
 #graph-section{
+    flex-direction: column;
+
     width: calc(60% - 48px - 80px);
     gap: 40px;
     align-self: stretch;

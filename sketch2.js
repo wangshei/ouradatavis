@@ -297,7 +297,7 @@ function draw(){
       
     for (var i = 0; i<summary_date.length; i++){
       stroke(255);
-      fill(220,220,220);
+      fill(230, 232, 243);
 
       let barHeight = onset_latency[i] / ((longest-0)/graphheight);
       let yPos = ybottom - barHeight;
