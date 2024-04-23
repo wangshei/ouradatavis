@@ -4,6 +4,10 @@
 		<meta charset="utf-8">
     	<title>DataVis</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script
+   src="https://cdn.jsdelivr.net/npm/xlsx@0.16.8/dist/xlsx.full.min.js"
+   integrity="sha256-Ic7HP804IrYks4vUqX1trFF1Nr33RjONeJESZnYxsOY="
+   crossorigin="anonymous"></script>
 		<script src="p5.min.js"></script>
 		<script src="sketch.js"></script>
 		<style>
@@ -16,6 +20,16 @@
 	</head>
 
 	<body>
+		<form class="input-group col-4 mb-5">
+			Choose Activity File
+			<input type="file" class="form-control" id="activityFile" />
+			</button>
+			Choose Weight File
+			<input type="file" class="form-control" id="weightFile" />
+			<button class="btn ml-2" type="submit" id="upload-button">
+			 Upload
+			</button>
+	   </form>
 		<div id="sketch3">
 		</div>
 	</body>

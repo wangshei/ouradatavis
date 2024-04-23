@@ -10,6 +10,7 @@ var sleep = {
 
 var activity = {
     summary_date:[],
+    cal_active:[],
     steps:[]
 };
 
@@ -201,6 +202,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
               result.forEach(row => {
                 activity.summary_date.push(row.summary_date);
                 activity.steps.push(parseInt(row.steps));
+                activity.cal_active.push(parseInt(row.cal_active));
               });
           });
 
