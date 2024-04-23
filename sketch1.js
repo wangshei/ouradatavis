@@ -53,7 +53,7 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
         // Normalize the sleep score data from 0 to 1
         let minSleepScore = Math.min(...sleepscore);
         let maxSleepScore = Math.max(...sleepscore);
-        let normalizedSleepScores = sleepscore.map(score =>
+        let normalizedSleepScores = sleepscore.map((score) =>
           map(score, minSleepScore, maxSleepScore, 0, 1)
         );
 
@@ -115,6 +115,12 @@ document.getElementById("upload-button").addEventListener("click", (e) => {
           activitysummarydate.push(result2[i].summary_date);
           activityscore.push(result2[i].score);
         }
+        // Normalize the activity score data from 0 to 1
+        let minActivityScore = Math.min(...activityscore);
+        let maxActivityScore = Math.max(...activityscore);
+        let normalizedActivityScores = activityscore.map((score) =>
+          map(score, minActivityScore, maxActivityScore, 0, 1)
+        );
 
         activityDataProcessed = true;
         checkDataProcessed();
@@ -132,7 +138,6 @@ function checkDataProcessed() {
   }
 }
 
-// im not sure what the let statements are for.
 
 function setup() {
   var canvas = createCanvas(windowWidth, windowHeight);
@@ -154,17 +159,16 @@ function draw() {
     text(i / 10, 60, y); // Label the hash mark
   }
 
- // Draw sleep summary dates
-for (var i = 0; i < sleepsummarydate.length; i++) {
-  if (i % 2 == 0) {
-    push();
-    translate(65 + i * bar_width + bar_width / 2, height - 10);
-    rotate(HALF_PI / 2);
-    text(sleepsummarydate[i], 0, 0);
-    pop();
+  // Draw sleep summary dates
+  for (var i = 0; i < sleepsummarydate.length; i++) {
+    if (i % 2 == 0) {
+      push();
+      translate(65 + i * bar_width + bar_width / 2, height - 10);
+      rotate(HALF_PI / 2);
+      text(sleepsummarydate[i], 0, 0);
+      pop();
+    }
   }
-}
-
 
   // Draw lines connecting sleep score data points
   stroke(0, 0, 255);
@@ -173,6 +177,16 @@ for (var i = 0; i < sleepsummarydate.length; i++) {
     let y1 = map(sleepscore[i], 0, 100, height - 50, 50);
     let x2 = xPositions[i + 1];
     let y2 = map(sleepscore[i + 1], 0, 100, height - 50, 50);
+    line(x1, y1, x2, y2);
+  }
+
+  // Draw lines connecting activity score data points
+  stroke(255, 0, 0); // Change color to red
+  for (let i = 0; i < activitysummarydate.length - 1; i++) {
+    let x1 = xPositions[i];
+    let y1 = map(activityscore[i], 0, 100, height - 50, 50);
+    let x2 = xPositions[i + 1];
+    let y2 = map(activityscore[i + 1], 0, 100, height - 50, 50);
     line(x1, y1, x2, y2);
   }
 
@@ -186,6 +200,17 @@ for (var i = 0; i < sleepsummarydate.length; i++) {
     circle(xpos, ypos, 4);
   }
 
+  // Draw circles at each activity score data point
+for (var i = 0; i < activitysummarydate.length; i++) {
+  stroke(0); // Set stroke color to red
+  fill(255, 255, 255); // Set fill color to white
+
+  var xpos = xPositions[i];
+  var ypos = map(activityscore[i], 0, 100, height - 50, 50);
+  circle(xpos, ypos, 4); // Draw a circle at the activity score data point
+}
+
+
   // Draw axes
   stroke(0);
   fill(0);
@@ -193,12 +218,10 @@ for (var i = 0; i < sleepsummarydate.length; i++) {
   line(65, 50, 65, 765); // y-axis
   stroke(255);
   textAlign(CENTER, CENTER);
-  text("sleepscore", 65, 20); // y-axis label
+  text("score", 65, 20); // y-axis label
   textAlign(LEFT, CENTER);
   text("Date", 875, 765); // x-axis label
 }
-
-
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
