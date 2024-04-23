@@ -5,7 +5,7 @@
 }
 
 #header{
-    width: calc(100% - 160px);
+    width: calc(100%);
 
     padding-top: 40px;
     padding-bottom: 40px;
@@ -189,28 +189,17 @@ p{
     align-items: flex-start;
     border-radius: 40px;
     border: 1px solid #D5D9FE;
-    
+
     background: #FFF;
 }
 
 #graph-section{
-    width: calc(60% - 48px - 80px);
+    width: calc(60% - 48px);
     gap: 40px;
     align-self: stretch;
-    position:relative;
 
 }
-.graph{
-    position: absolute;
-    border-radius: 40px;
-    padding:40px;
-    top: 0;
-    left: 0;
-    width: calc(100%  - 80px);
-    height: calc(100% - 80px);
-    background-color: #FFF;
-    z-index:0;
-}
+
 #insights-section{
     gap: 24px;
     flex: 1 0 0;
@@ -266,7 +255,19 @@ h2{
     margin:0;
 }
 
-
+.requirements{
+    font-size: 15px;
+    font-weight: 600;
+    
+}
+.waitinggif{
+    width: 63px;
+    margin: -21px -15px -19px -15px;
+    display: inline;
+}
+.reqwaiting{
+    color: #6666FF;
+}
 .modal {
     display: none;
     position: fixed;
@@ -288,6 +289,7 @@ h2{
     height:60%;
 
     display: flex;
+    gap:20px;
     flex-direction: column;
     
 }
@@ -320,10 +322,20 @@ form p{
     
 }
 
+#datadropbox>label{
+    height: 200px;
+}
+
+.uploadtitle{
+    /* margin-top:10px; */
+    font-weight: 500;
+    font-size: 18px;
+}
+
 form{
     display:flex;
     justify-content:space-between;
-    height:100%;
+    height:50%;
 
 }
 
@@ -353,16 +365,4 @@ button{
     display:flex;
     justify-content: center;
     margin-top: auto;
-}
-
-#overview-graph{
-    display:block;
-}
-
-#sleep-graph{
-    display:none;
-}
-
-#activity-graph{
-    display:none;
 }
