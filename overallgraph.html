@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-    	<title>DataVis</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<script src="p5.min.js"></script>
-		<script src="sketch.js"></script>
-		<style>
-			body{
-				background-color: #000000;
-				margin: 0px;
-				overflow: hidden;
-			}
-		</style>
-	</head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graphing Normalized Data</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+</head>
+<body>
+  <h2>Select Excel files to upload:</h2>
+  <input id="fileInput" type="file" accept=".xlsx" multiple>
+  <canvas id="myCanvas" width="800" height="400"></canvas>
 
-	<body>
-		<div id="sketch1">
-		</div>
-	</body>
+  <script src="sketch1.js"></script>
+</body>
 </html>
