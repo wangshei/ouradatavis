@@ -1,3 +1,7 @@
+// import {sleep, weight} from "./data.js";
+
+console.log(sleep, weight)
+
 function setup(){
   var canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent("sketch");

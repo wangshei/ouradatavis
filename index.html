@@ -4,8 +4,15 @@
     <meta charset="utf-8" />
     <title>DataVis</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- <script src="p5.min.js"></script>
-		<script src="sketch.js"></script> -->
+    <script src="p5.min.js"></script>
+    <script src="data.js"></script>
+		<script src="sketch1.js"></script>
+    <script
+    src="https://cdn.jsdelivr.net/npm/xlsx@0.16.8/dist/xlsx.full.min.js"
+    integrity="sha256-Ic7HP804IrYks4vUqX1trFF1Nr33RjONeJESZnYxsOY="
+    crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.typekit.net/gvy5kun.css">
     <link rel="stylesheet" type="text/css" href="index.css" />
   </head>
 
@@ -54,11 +61,7 @@
           <div class="tab">Activity</div>
         </div>
         <div id="content">
-          <div class="tile" id="graph-section">
-            <div id="overview-graph" class="graph">Overview lol</div>
-            <div id="sleep-graph" class="graph">Sleep lol</div>
-            <div id="activity-graph" class="graph">activities lol</div>
-          </div>
+          <div class="tile" id="graph-section"></div>
           <div class="tile" id="insights-section">
             <div class="title">Insights</div>
             <div id="insights-content">
@@ -87,57 +90,75 @@
           ><img src="assets/close.png" class="icon"
         /></span>
 		<div>
-        <h2>Upload Data</h2>
-        <p2>Upload each file.</p2>
-	</div>
-        <form>
-			<div id="uploads">
+        <h2
+          class="uploadtitle"
+        >Upload Data</h2>
+    </div>
+      <form
+      id="datadropbox"
+      class="flex items-center justify-center w-full">
+        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <svg class="w-8 h-6 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                </svg>
+                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Drop Individual Oura Data <span class="datatexttype">[.xlsx]</span>  Files</p>
+            </div>
+            <input id="dropzone-file" type="file" class="hidden" />
+        </label>
+      </form>
+      <div
+        class="requirements"
+      >
+        <div
+          class="sleepreq reqwaiting"
+        >
+          <img
+            class="waitinggif"
+            src="./assets/waiting.gif"
+          />
+          <span
+              class="sleeptext"
+          >REQUIRE [sleep.xlsx]</span>
+        </div>
+        <div
+          class="actreq reqwaiting"
+        >
+          <img
+            class="waitinggif"
+            src="./assets/waiting.gif"
+          />
+          <span
+            class="activitytext"
+          >
+          REQUIRE [activity.xlsx]
+          </span>
+        </div>
+        <div
+          class="weireq reqwaiting"
+        >
+          <img
+            class="waitinggif"
+            src="./assets/waiting.gif"
+          />
+          <span
+            class="weitext"
+          >
+          REQUIRE [weight.xlsx]
+          </span>
           
-          <div class="upload">
-			<p>Choose Sleep File</p>
-            <input type="file" id="sleepFile" />
-            
-          </div>
-          
-          <div class="upload">
-			<p>Choose Activity File</p>
-
-            <input type="file" id="activityFile" />
-		  </div>
-		  </div>
-
-		  <div id="button-container">
-		  <button type="submit">
-			Upload
-		   </button>
-		</div>
-        </form>
+        </div>
+      </div> 
       </div>
     </div>
 
     <script defer>
       const tabs = document.querySelectorAll(".tab");
-      const overviewGraph = document.getElementById("overview-graph");
-      const sleepGraph = document.getElementById("sleep-graph");
-      const activityGraph = document.getElementById("activity-graph");
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
           tabs.forEach((t) => t.removeAttribute("id"));
           tab.setAttribute("id", "selected");
-
-          if (tab.innerHTML === "Overview") {
-            overviewGraph.style.display = "block";
-            sleepGraph.style.display = "none";
-            activityGraph.style.display = "none";
-          } else if (tab.innerHTML === "Sleep") {
-            overviewGraph.style.display = "none";
-            sleepGraph.style.display = "block";
-            activityGraph.style.display = "none";
-          } else if (tab.innerHTML === "Activity") {
-            overviewGraph.style.display = "none";
-            sleepGraph.style.display = "none";
-            activityGraph.style.display = "block";
-          }
         });
       });
       document.addEventListener("DOMContentLoaded", function () {
