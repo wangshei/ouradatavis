@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
   loadData();
 
    weight_lbs = weight.weight_lbs;
-day_weight = weight.day_weight;
+  day_weight = weight.day_weight;
 
- cal_active = activity.cal_active;
+  cal_active = activity.cal_active;
 })
 
 

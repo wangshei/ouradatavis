@@ -154,7 +154,22 @@
           </span>
         </div>
         <div
-          class="weireq reqwaiting"
+          class="readreq reqwaiting"
+        >
+          <img
+            class="waitinggif"
+            src="./assets/waiting.gif"
+          />
+          <span
+            class="readtext"
+          >
+          REQUIRE [readiness.xlsx]
+          </span>
+          
+        </div>
+
+        <div
+        class="weireq reqwaiting"
         >
           <img
             class="waitinggif"
@@ -172,6 +187,61 @@
     </div>
 
     <script defer>
+
+const tabs = document.querySelectorAll(".tab");
+      
+      const overviewInsights = document.getElementById("overview-insights");
+      const sleepInsights = document.getElementById("sleep-insights");
+      const activityInsights = document.getElementById("activity-insights");
+      const weightInsights = document.getElementById("weight-insights");
+
+      
+      sleepInsights.style.display ="none";
+      overviewInsights.style.display ="none";
+      weightInsights.style.display ="none";
+      
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+
+          tabs.forEach((t) => t.removeAttribute("id"));
+          tab.setAttribute("id", "selected");
+
+          if (tab.innerHTML === "Overview") {
+            
+            overviewInsights.style.display = "block";
+            sleepInsights.style.display = "none";
+            activityInsights.style.display = "none";
+            weightInsights.style.display = "none";
+
+
+          } else if (tab.innerHTML === "Sleep") {
+            
+            overviewInsights.style.display = "none";
+            sleepInsights.style.display = "block";
+            activityInsights.style.display = "none";
+            weightInsights.style.display = "none";
+
+          } else if (tab.innerHTML === "Activity") {
+            
+            overviewInsights.style.display = "none";
+            sleepInsights.style.display = "none";
+            activityInsights.style.display = "block";
+            weightInsights.style.display = "none";
+
+
+          }else if(tab.innerHTML === "Movement") {
+
+
+            overviewInsights.style.display = "none";
+            sleepInsights.style.display = "none";
+            activityInsights.style.display = "none";
+            weightInsights.style.display = "block";
+          }
+          
+
+        });
+      });
       document.addEventListener("DOMContentLoaded", function () {
         // Hide the modal when the page loads
         closeModal();

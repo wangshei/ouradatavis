@@ -9,7 +9,14 @@
 // document.getElementById("sleepFile").addEventListener("change", (event) => {
 //   sleepFile = event.target.files[0]; // selecting the file
 // });
-
+let light;
+let rem;
+let deep;
+let total;
+let efficiency;
+let summarydate;
+let steps;
+let day_steps;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Load data from local storage
@@ -41,13 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
   steps = activity.steps;
   day_steps = activity.summary_date;
 
-  earliest = Infinity; 
-  latest = 0;
-
-  minsteps = Infinity;
-  maxsteps = 0;
 })
 
+let earliest = Infinity; 
+let latest = 0;
+
+let minsteps = Infinity;
+let maxsteps = 0;
 
 // //var high_efficiency;
 // //var low_efficiency;
