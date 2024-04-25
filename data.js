@@ -1,4 +1,5 @@
 var sleep = {
+    score:[],
     light:[],
     rem:[],
     deep:[],
@@ -10,6 +11,7 @@ var sleep = {
   };
 
 var activity = {
+    score:[],
     summary_date:[],
     cal_active:[],
     steps:[],
@@ -57,9 +59,9 @@ function updateInsights(category, insights) {
 document.addEventListener('DOMContentLoaded', () => {
   // Load data from local storage
   function loadData() {
-      const defaultData = { light: [], rem: [], deep: [], total: [], onset_latency: [], summary_date: [], efficiency: [], insights: [] };
+      const defaultData = { score: [], light: [], rem: [], deep: [], total: [], onset_latency: [], summary_date: [], efficiency: [], insights: [] };
       sleep = JSON.parse(localStorage.getItem('sleepData')) || defaultData;
-      activity = JSON.parse(localStorage.getItem('activityData')) || { summary_date: [], cal_active: [], steps: [], insights: [] };
+      activity = JSON.parse(localStorage.getItem('activityData')) || { score: [], summary_date: [], cal_active: [], steps: [], insights: [] };
       weight = JSON.parse(localStorage.getItem('weightData')) || { weight_lbs: [], day_weight: [] };
       readiness = JSON.parse(localStorage.getItem('readinessData')) || { summary_date: [], score: [], insights: [] };
       overInsight = JSON.parse(localStorage.getItem('overInsight')) || [];
@@ -217,6 +219,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 for (let i = 0; i < result.length; i++) {
                     sleep.summary_date.push(result[i].summary_date);
                     sleep.light.push(parseFloat(result[i].light));
+                    sleep.score.push(parseInt(result[i].score));
                     sleep.rem.push(parseFloat(result[i].rem));
                     sleep.deep.push(parseFloat(result[i].deep));
                     sleep.total.push(parseFloat(result[i].total));
@@ -297,9 +300,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
             workbook.SheetNames.forEach((sheet) => {
               const result = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], { raw: false });
-
+              console.log(activity);
               result.forEach(row => {
                 activity.summary_date.push(row.summary_date);
+                activity.score.push(parseInt(row.score));
                 activity.steps.push(parseInt(row.steps));
                 activity.cal_active.push(parseInt(row.cal_active))
               });
