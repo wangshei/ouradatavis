@@ -112,7 +112,6 @@ let maxsteps = 0;
 //     //var highestEfficiency = Math.max(...numberEfficiency);
 //     //var lowestEfficiency = Math.min(...numberEfficiency);
 
-//     xPositions = dateTimestamps.map(timestamp => map(timestamp, earliestTimeStamp, latestTimeStamp, 65, 865));
 //     /*  latest = 0;
 //         earliest = Infinity;
 //         for(var i=0; i < summarydate.length; i++) {
@@ -239,24 +238,40 @@ function setup(){
 }
 //console.log("Efficiency array", efficiency);
 
-
-xtop = 65;
-ytop = 65;
-xbottom = 865;
-ybottom = 508;
- graphheight = ybottom-ytop;
 divWidth;
 divHeight;
 
 
 function draw() {
+
+  console.log("draw is running")
+  
+  divWidth = document.getElementById('activity-graph').clientWidth;
+  console.log(divWidth)
+  divHeight = document.getElementById('activity-graph').clientHeight;
+  console.log(divHeight)
+
+  xtop = divWidth*0.1;
+  ytop = divHeight*0.1;
+  xbottom = divWidth*0.9;
+  ybottom = divHeight*0.9;
+  graphheight = ybottom-ytop;
+
+  console.log(xtop + "is xtop")
+  console.log(xbottom + "is xbottom")
+  console.log(ytop + "is ytop")
+  console.log(ybottom+"is ybottom")
+  bar_width = (xbottom-xtop)/(total.length);
+
+
   background(255); // Clear the canvas each frame
 
   strokeWeight(1);
+
   // Draw y-axis labels for efficiency
   textAlign(RIGHT, CENTER);
   for (let i = 0; i <= 100; i += 10) {
-    let y = map(i, 0, 100, ybottom, xtop);
+    let y = map(i, 0, 100, ybottom, ytop);
     text(i+" -", xtop, y);
   }
 
@@ -265,7 +280,7 @@ function draw() {
   for (let i = 0; i < summarydate.length; i++) {
     if (i % 2 == 0) {
       push();
-      translate(65 + i * bar_width, 512);
+      translate(xtop + i * bar_width+10, ybottom+5);
       rotate(HALF_PI / 2);
       text(summarydate[i], 0, 0);
       pop();
@@ -292,11 +307,11 @@ function draw() {
   stroke(67,1,89);    
   strokeWeight(3);
   for (let i = 0; i < summarydate.length - 1; i++) {
-    let x1 = xPositions[i];
+    let x1 = xtop + 5+ bar_width*[i];
     //let y1 = map(efficiency[i], 0, 100, height, 0);
-    let y1 = -efficiency[i]/100*508+508;
-    let x2 = xPositions[i + 1];
-    let y2 = -efficiency[i+1]/100*508+508;
+    let y1 = -efficiency[i]/100*graphheight+ybottom;
+    let x2 = xtop + 5+ bar_width*[i+1];
+    let y2 = -efficiency[i+1]/100*graphheight+ybottom;
     line(x1, y1, x2, y2);
   }
 
@@ -305,8 +320,8 @@ function draw() {
     stroke(0);
     fill(224,227,255);    
 
-    let xpos = xPositions[i];
-    let ypos =  -efficiency[i]/100*ybottom+ybottom;
+    let xpos = xtop + 5+ bar_width*[i];
+    let ypos =  -efficiency[i]/100*graphheight+ybottom;
     circle(xpos, ypos, 4);
     console.log(`Drawing summary date at index ${i}: xpos=${xpos}, ypos=${ypos}`);
   }
@@ -315,12 +330,12 @@ function draw() {
   stroke(255,226,237); // Set color to red for steps data
   
   for (let i = 0; i < day_steps.length - 1; i++) {
-    let steps_x1 = xPositions[i];
+    let steps_x1 = xtop + 5+ bar_width*[i];
     let steps_y1 = -steps[i]/maxStepValue*graphheight+ybottom
     //let steps_y1 = map(steps[i], 0, maxsteps, height, 0);//map from height to 0
     //let steps_y2 = map(steps[i + 1], 0, maxsteps, height, 0);//map from height to 0
     let steps_y2 = -steps[i+1]/maxStepValue*graphheight+ybottom
-    let steps_x2 = xPositions[i + 1];
+    let steps_x2 = xtop + 5+ bar_width*[i+1];
 
     line(steps_x1, steps_y1, steps_x2, steps_y2);
   }
@@ -330,46 +345,32 @@ function draw() {
     stroke(0);
     fill(29,27,119);
 
-    let stc_xpos = xPositions[i];
+    let stc_xpos = xtop + 5+ bar_width*[i];
     let stc_ypos = -steps[i]/maxStepValue*graphheight+ybottom
     circle(stc_xpos, stc_ypos, 4);
 
   // Draw x and y axis lines and labels
+ 
+}
+
   stroke(0);
   strokeWeight(1);
   fill(0);
-  line(xtop, ybottom, 865, ybottom); // x-axis
+  line(xtop, ybottom, xbottom, ybottom); // x-axis
   line(xtop, ytop, xtop, ybottom); // y-axis
   line(xbottom, ytop-10, xbottom, ybottom); // right border
-  stroke(255);
+  stroke(0);
   textAlign(CENTER, CENTER);
   text("Efficiency", xtop, ytop-20); // y-axis label
   textAlign(LEFT, CENTER);
   //text("Date", xbottom, ybottom); // x-axis label
   textAlign(CENTER, CENTER);
   text("Steps", xbottom, ytop-20); // right border label
-}
 
+}
 
 function windowResized(){
   resizeCanvas(windowWidth, windowHeight);
 }
 
-
-/*
-
-
-
-
-let activity= {
-
-  steps:[]
-}
-
-let sleep= {
-
-  efficiency:[]
-}
-*/
-}
 
