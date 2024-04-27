@@ -240,40 +240,48 @@ function setup(){
 
 divWidth;
 divHeight;
+let graphheight;
+let maxEfficiency;
+let minEfficiency;
+let maxStepValue;
+let message = "";
+let xtop;
+let xbottom;
+let ytop;
+let ybottom;
 
 
 function draw() {
 
-  console.log("draw is running")
+  //console.log("draw is running")
   
   divWidth = document.getElementById('activity-graph').clientWidth;
-  console.log(divWidth)
+  //console.log(divWidth)
   divHeight = document.getElementById('activity-graph').clientHeight;
-  console.log(divHeight)
+  //console.log(divHeight)
 
   xtop = divWidth*0.1;
-  ytop = divHeight*0.1;
+  ytop = divHeight*0.2;
   xbottom = divWidth*0.9;
-  ybottom = divHeight*0.9;
+  ybottom = divHeight*0.8;
   graphheight = ybottom-ytop;
 
-  console.log(xtop + "is xtop")
-  console.log(xbottom + "is xbottom")
-  console.log(ytop + "is ytop")
-  console.log(ybottom+"is ybottom")
+  // console.log(xtop + "is xtop")
+  // console.log(xbottom + "is xbottom")
+  // console.log(ytop + "is ytop")
+  // console.log(ybottom+"is ybottom")
   bar_width = (xbottom-xtop)/(total.length);
 
 
   background(255); // Clear the canvas each frame
 
-  strokeWeight(1);
+  strokeWeight(0);
 
   // Draw y-axis labels for efficiency
-  textAlign(RIGHT, CENTER);
-  for (let i = 0; i <= 100; i += 10) {
-    let y = map(i, 0, 100, ybottom, ytop);
-    text(i+" -", xtop, y);
-  }
+  // for (let i = 0; i <= 100; i += 10) {
+  //   let y = map(i, 0, 100, ybottom, ytop);
+  //   text(i+" -", xtop, y);
+  // }
 
   // Draw x-axis labels for dates
   textAlign(LEFT, CENTER);
@@ -289,7 +297,7 @@ function draw() {
 
   // Draw y-axis labels for steps
   textAlign(LEFT, CENTER);
-  let maxStepValue = 0;
+   maxStepValue = 0;
   for(var i = 0; i <= steps.length; i++){
     var t = float(steps[i]);
     if (t>maxStepValue){
@@ -297,51 +305,75 @@ function draw() {
       //console.log(heaviest + "is heaviest");
     }  }
     
-    for (let i = 0; i <= maxStepValue; i += 1000) {
+    for (let i = 0; i <= maxStepValue; i += 1500) {
     let y = map(i, 0, maxStepValue, ybottom, ytop); // Corrected the variable name here
-    text("- "+i, xbottom, y);
+    text("- "+i, xbottom+10, y);
+    //console.log(maxStepValue + "is max Step value")
+
+  }
+
+textAlign(RIGHT, CENTER);
+
+ maxEfficiency = 0;
+ minEfficiency = 100;
+
+  for(var i = 0; i <= efficiency.length; i++){
+    var t = float(efficiency[i]);
+    if (t>maxEfficiency){
+      maxEfficiency = t;
+      //console.log(maxEfficiency + "is max");
+    }  
+    if (t<minEfficiency){
+      minEfficiency = t;
+      //console.log(minEfficiency + "is min");
+    } 
+  }
+    
+    for (let i = minEfficiency; i <= maxEfficiency; i += 5) {
+    let y = map(i, minEfficiency, maxEfficiency, ybottom, ytop); // Corrected the variable name here
+    text(i+" -", xtop, y);
 }
 
 
   // Draw line graph for efficiency data
   stroke(67,1,89);    
   strokeWeight(3);
-  for (let i = 0; i < summarydate.length - 1; i++) {
+  for (let i = 0; i < efficiency.length - 1; i++) {
     let x1 = xtop + 5+ bar_width*[i];
     //let y1 = map(efficiency[i], 0, 100, height, 0);
-    let y1 = -efficiency[i]/100*graphheight+ybottom;
+    let y1 = (-(efficiency[i]-minEfficiency))/(maxEfficiency-minEfficiency)*graphheight+ybottom;
     let x2 = xtop + 5+ bar_width*[i+1];
-    let y2 = -efficiency[i+1]/100*graphheight+ybottom;
+    let y2 = (-(efficiency[i+1]-minEfficiency))/(maxEfficiency-minEfficiency)*graphheight+ybottom;
     line(x1, y1, x2, y2);
   }
 
   // Draw circles for efficiency data
-  for (let i = 0; i < summarydate.length; i++) {
+  for (let i = 0; i < efficiency.length; i++) {
     stroke(0);
     fill(224,227,255);    
 
     let xpos = xtop + 5+ bar_width*[i];
-    let ypos =  -efficiency[i]/100*graphheight+ybottom;
+    let ypos =  (-(efficiency[i]-minEfficiency))/(maxEfficiency-minEfficiency)*graphheight+ybottom;
     circle(xpos, ypos, 4);
-    console.log(`Drawing summary date at index ${i}: xpos=${xpos}, ypos=${ypos}`);
+    //console.log(`Drawing summary date at index ${i}: xpos=${xpos}, ypos=${ypos}`);
   }
 
   // Draw line graph for steps data
-  stroke(255,226,237); // Set color to red for steps data
+  stroke(224,227,255);       // Set color to red for steps data
   
-  for (let i = 0; i < day_steps.length - 1; i++) {
+  for (let i = 0; i < efficiency.length - 1; i++) {
     let steps_x1 = xtop + 5+ bar_width*[i];
-    let steps_y1 = -steps[i]/maxStepValue*graphheight+ybottom
+    let steps_y1 = (-steps[i]/maxStepValue)*graphheight+ybottom
     //let steps_y1 = map(steps[i], 0, maxsteps, height, 0);//map from height to 0
     //let steps_y2 = map(steps[i + 1], 0, maxsteps, height, 0);//map from height to 0
-    let steps_y2 = -steps[i+1]/maxStepValue*graphheight+ybottom
+    let steps_y2 = -(steps[i+1]/maxStepValue)*graphheight+ybottom
     let steps_x2 = xtop + 5+ bar_width*[i+1];
 
     line(steps_x1, steps_y1, steps_x2, steps_y2);
   }
 
   //Draw circles for steps data
-  for (let i = 0; i < day_steps.length; i++) {
+  for (let i = 0; i < efficiency.length; i++) {
     stroke(0);
     fill(29,27,119);
 
@@ -356,16 +388,71 @@ function draw() {
   stroke(0);
   strokeWeight(1);
   fill(0);
-  line(xtop, ybottom, xbottom, ybottom); // x-axis
+  line(xtop, ybottom, xbottom+10, ybottom); // x-axis
   line(xtop, ytop, xtop, ybottom); // y-axis
-  line(xbottom, ytop-10, xbottom, ybottom); // right border
+  line(xbottom+10, ytop-10, xbottom+10, ybottom); // right border
   stroke(0);
   textAlign(CENTER, CENTER);
+
+  strokeWeight(0);
+
   text("Efficiency", xtop, ytop-20); // y-axis label
   textAlign(LEFT, CENTER);
   //text("Date", xbottom, ybottom); // x-axis label
   textAlign(CENTER, CENTER);
   text("Steps", xbottom, ytop-20); // right border label
+
+  text(message, (xbottom+xtop)/2, ytop-15)
+  console.log(message)
+
+}
+
+function mouseMoved(){
+  // fill(230, 232, 243);
+  // stroke(230, 232, 243);
+
+//console.log("mouse move called")
+  for (var i = 0; i<summarydate.length; i++){
+    
+    
+
+    let barHeight = -(efficiency[i]-minEfficiency)/(maxEfficiency-minEfficiency)*graphheight+ybottom
+    let xPos = xtop + 5+ bar_width*[i];
+
+    let barHeight2 = -(steps[i]/maxStepValue)*graphheight+ybottom
+    let xPos2 =  xtop + 5+ bar_width*[i];
+
+    // console.log( xPos + "is xpos")
+    // console.log( barHeight + "is barheight")
+    
+    // console.log( maxEfficiency + "is max")
+    // console.log( minEfficiency + "is min")
+    // console.log(graphheight + "is graph height")
+    // console.log(summarydate[i])
+    // console.log(maxStepValue+"is barheight 2")
+    
+    if(mouseX > xPos-5 && mouseX < xPos+5 && mouseY > barHeight-5 && mouseY < barHeight+5){
+      message = "Efficiency is "+(efficiency[i]).toString()+" on "+summarydate[i];
+    //console.log(message+"is message 1")
+  }
+  // fill(224,227,255);      
+  // stroke(224,227,255);      
+
+
+  
+    if(mouseX > xPos2-5 && mouseX < xPos2+5 && mouseY > barHeight2-5 && mouseY < barHeight2+5){
+      message = "Steps is "+(steps[i]).toString()+" on "+summarydate[i];
+     //console.log(message+"is message 2")
+
+  }
+
+
+  
+
+
+  // stroke(255);
+  // fill(255)
+}
 
 }
 
