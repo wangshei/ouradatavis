@@ -1,16 +1,9 @@
-var sleepscore = [];
-var sleepsummarydate = [];
 
-var activityscore = [];
+var sleepsummarydate = [];
 var activitysummarydate = [];
 
-var weightscore = [];
 var weightsummarydate = [];
-let normalizedWeightScores = [];
-
-var readinessscore = [];
 var readinesssummarydate = [];
-let normalizedReadinessScores = [];
 
 var earliest = Infinity;
 var latest = 0;
@@ -22,16 +15,11 @@ var dateTimestamps;
 
 var latestTimeStamp;
 var earliestTimeStamp;
-let minWeightScore; 
-let maxWeightScore;
 
-let maxReadinessScore;
-let minReadinessScore;
-
-let minSleepScore;
-let maxSleepScore;
-let minActivityScore;
-let maxActivityScore;
+let xbottom;
+let xtop;
+let ybottom;
+let ytop;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Load data from local storage
@@ -52,22 +40,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize the application
   loadData();
-
-  weight_lbs = weight.weight_lbs;
-  day_weight = weight.day_weight;
-
-  cal_active = activity.cal_active;
-  sleepscore = sleep.score;
-  sleepsummarydate = sleep.summary_date;
-
-  activityscore = activity.score;
+  steps = activity.steps;
+  total = sleep.total;
+  summary_date = sleep.summary_date;
+  //activityscore = activity.score;
   activitysummarydate = activity.summary_date;
 
-  weightscore = weight.weight_lbs;
+  weight_lbs = weight.weight_lbs;
   weightsummarydate = weight.day_weight;
 
 
-  readinessscore = readiness.score;
+  //readinessscore = readiness.score;
   readinesssummarydate = readiness.summary_date;
   
   numLabels = 5; // Number of date labels to show
@@ -93,42 +76,44 @@ earliestTimeStamp = Math.min(...dateTimestamps);
 
 xPositions = dateTimestamps.map((timestamp) => {
   // Scale the timestamp value to the new range
-  return 65 + (timestamp - earliestTimeStamp) * (865 - 65) / (latestTimeStamp - earliestTimeStamp);
+  return 65 + (timestamp - earliestTimeStamp) * (xbottom-xtop) / (latestTimeStamp - earliestTimeStamp);
 });
 
 // console.log(xPositions);
 
-minWeightScore = Math.min(...weightscore);
-maxWeightScore = Math.max(...weightscore);
+longest = 0;
+bar_width = (xbottom-xtop)/(total.length);
+                for(var i = 0; i <= total.length; i++){
+                  var t = total[i];
+                  if (t>longest){
+                    longest = t;
+                    //console.log(longest + "is longest");
+                  }
+                }
+                lightest = 1000;
+                heaviest = 0;
+                        for(var i = 0; i <= weight_lbs.length; i++){
+                          var t = weight_lbs[i];
+                          if (t>heaviest){
+                            heaviest = t;
+                            //console.log(heaviest + "is heaviest");
+                          }
+                          if (t<lightest){
+                            lightest = t;
+                            //console.log(lightest + "is lightest");
+                          }
+                        }
 
-normalizedWeightScores = weightscore.map(
-  (score) =>
-    (score - minWeightScore) / (maxWeightScore - minWeightScore)
-);
 
-// Calculate the minimum and maximum values of the weight scores
-minReadinessScore = Math.min(...readinessscore);
-maxReadinessScore = Math.max(...readinessscore);
+                        maxStepValue = 0;
+                        for(var i = 0; i <= steps.length; i++){
+                          var t = steps[i];
+                          if (t>maxStepValue){
+                            maxStepValue = t;
+                            //console.log(heaviest + "is heaviest");
+                          }  }
+                          
 
-normalizedReadinessScores = readinessscore.map(
-  (score) =>
-    (score - minReadinessScore) /
-    (maxReadinessScore - minReadinessScore)
-);
-
-minSleepScore = Math.min(...sleepscore);
-maxSleepScore = Math.max(...sleepscore);
-normalizedSleepScores = sleepscore.map((score) => {
-  // Scale the score value to the new range
-  return (score - minSleepScore) / (maxSleepScore - minSleepScore);
-});
-
-minActivityScore = Math.min(...activityscore);
-maxActivityScore = Math.max(...activityscore);
-normalizedActivityScores = activityscore.map((score) => {
-  // Scale the score value to the new range
-  return (score - minActivityScore) / (maxActivityScore - minActivityScore);
-});
 
 })
 
@@ -136,6 +121,7 @@ normalizedActivityScores = activityscore.map((score) => {
 
 let divWidth;
 let divHeight;
+let graphheight;
 function setup(){
   divWidth = document.getElementById('overview-graph').clientWidth;
   divHeight = document.getElementById('overview-graph').clientHeight;
@@ -152,6 +138,24 @@ function setup(){
                 
       
 function draw() {
+  
+  weight_lbs = weight.weight_lbs;
+  day_weight = weight.day_weight;
+
+  steps = activity.steps;
+  total = sleep.total;
+  sleepsummarydate = sleep.summary_date;
+
+  activityscore = activity.score;
+  activitysummarydate = activity.summary_date;
+
+  weightscore = weight.weight_lbs;
+  weightsummarydate = weight.day_weight;
+
+
+  readinessscore = readiness.score;
+  readinesssummarydate = readiness.summary_date;
+
   divWidth = document.getElementById('overview-graph').clientWidth;
   divHeight = document.getElementById('overview-graph').clientHeight;
   fill(255);
@@ -159,12 +163,12 @@ function draw() {
   rect(0,0,divWidth, divHeight);
 
     textAlign(CENTER, CENTER);
-    textSize(20);
+    textSize(13);
   
     xtop = divWidth*0.1;
-    ytop = divHeight*0.1;
-    xbottom = divWidth*0.9;
-    ybottom = divHeight*0.9;
+    ytop = divHeight*0.08;
+    xbottom = divWidth*0.95;
+    ybottom = divHeight*0.85;
     graphheight = ybottom-ytop;
 
     // Once data is processed, draw the graph
@@ -172,131 +176,134 @@ function draw() {
     stroke(0);
     fill(0);
   
-    textAlign(LEFT, CENTER);
   
     // Draw hash marks and labels on the y-axis
     for (let i = 0; i <= 10; i++) {
-      let y = map(i / 10, 0, 1, height - 50, 50); // Calculate y-coordinate for each hash mark
-      line(60, y, 65, y); // Draw the hash mark
+      let y = map(i / 10, 0, 1, ybottom, ytop); // Calculate y-coordinate for each hash mark
+      line(xtop, ytop, xtop, ybottom); // Draw the hash mark
       textAlign(RIGHT, CENTER);
       noStroke();
-      text(i / 10, 60, y); // Label the hash mark
+      text(i *10+"%-", xtop, y); // Label the hash mark
     }
-  stroke(0);
-  fill(0);
-
-  bar_width = (xbottom - xtop) / activitysummarydate.length;
-
+    bar_width = (xbottom - xtop) / summary_date.length;
 
 
   // Draw date labels horizontally without rotation
-  textAlign(CENTER, CENTER);
-  labelSpacing = Math.ceil(sleepsummarydate.length / 5); // Spacing between date labels
-  for (let i = 0; i < sleepsummarydate.length; i += labelSpacing) {
-    let x = map(i, 0, sleepsummarydate.length - 1, 65, 865); // Calculate x-coordinate for each date label
-    let y = ybottom + 20; // Adjust vertical position
-    text(sleepsummarydate[i], x, y); // Display the date label
-  }
+  textAlign(LEFT, CENTER);
+  for (var i = 0; i<summary_date.length; i++){
+    if (i%2==0){
+     push();
+     translate(xtop + i * bar_width+5, ybottom+5);
+     rotate(HALF_PI/2); // default is radiants
+     text(summary_date[i],0,0);
+     //console.log(summary_date[i]);
+     pop(); // go back to the original codition so we can isolate different things)
+ 
+     }
 
-  // Draw lines connecting sleep score data points
-  stroke(64, 119, 27);
-  for (let i = 0; i < sleepsummarydate.length - 1; i++) {
-    let x1 = xPositions[i];
-    // console.log(sleepscore[i]);
-    let y1 = (-(sleepscore[i]) / 100) * ybottom + ybottom;
-    let x2 = xPositions[i + 1];
-    let y2 = (-sleepscore[i + 1] / 100) * ybottom + ybottom;
-    line(x1, y1, x2, y2);
-  }
+   }
 
-  // Draw lines connecting activity score data points
-  stroke(134, 77, 191); // Change color to red
-  for (let i = 0; i < activitysummarydate.length - 1; i++) {
-    let x1 = xPositions[i];
-    let y1 = (-activityscore[i]/ 100) * ybottom + ybottom;
-
-    let x2 = xPositions[i + 1];
-    let y2 = (-activityscore[i + 1] / 100) * ybottom + ybottom;
-    line(x1, y1, x2, y2);
-  }
-
-  // Draw lines connecting weight score data points
-  stroke(0, 164, 186); // Change color to green
-  for (let i = 0; i < weightsummarydate.length - 1; i++) {
-    let x1 = xPositions[i];
-    let y1 = -normalizedWeightScores[i] * ybottom + ybottom;
-    let x2 = xPositions[i + 1];
-    let y2 = -normalizedWeightScores[i + 1] * ybottom + ybottom;
-    
-
-
-    line(x1, y1, x2, y2);
-  }
-
-  // Draw lines connecting readiness score data points
-  stroke(211, 100, 100); // Change color to purple
-
-  for (let i = 0; i < readinesssummarydate.length - 1; i++) {
-    let x1 = xPositions[i];
-    let y1 = -normalizedReadinessScores[i] * ybottom + ybottom;
-    let x2 = xPositions[i + 1];
-    let y2 = -normalizedReadinessScores[i + 1] * ybottom + ybottom;
-    console.log("x1: "+ x1 + ", y1: " + y1);
-    console.log("x2: "+ x2 + ", y2: " + y2);
-    line(x1, y1, x2, y2);
-  }
-
-  // Draw circles at each sleep score data point
-  for (var i = 0; i < sleepsummarydate.length; i++) {
-    stroke(0);
-    fill(255, 255, 255);
-
-    var xpos = xPositions[i];
-    var ypos = (-sleepscore[i] / 100) * ybottom + ybottom;
-    circle(xpos, ypos, 4);
-  }
-
-  // Draw circles at each activity score data point
-  for (var i = 0; i < activitysummarydate.length; i++) {
-    stroke(0);
-    fill(255, 255, 255); // Set fill color to white
-
-    var xpos = xPositions[i];
-    var ypos = (-activityscore[i] / 100) * ybottom + ybottom;
-    circle(xpos, ypos, 4); // Draw a circle at the activity score data point
-  }
-
-  // Draw circles at each weight score data point
-  for (var i = 0; i < weightsummarydate.length; i++) {
-    stroke(0);
-    fill(255, 255, 255); // Set fill color to white
-
-    var xpos = xPositions[i];
-    var ypos = -normalizedWeightScores[i] * ybottom + ybottom;
-    circle(xpos, ypos, 4); // Draw a circle at the normalized weight score data point
-  }
-
-  // Draw circles at each readiness score data point
-  for (var i = 0; i < readinesssummarydate.length; i++) {
-    stroke(0);
-    fill(255, 255, 255); // Set fill color to white
-
-    var xpos = xPositions[i];
-    var ypos = -normalizedReadinessScores[i] * ybottom + ybottom;
-    circle(xpos, ypos, 4); // Draw a circle at the normalized readiness score data point
-  }
-
-  // Draw axes
   stroke(0);
   fill(0);
-  line(xtop, ybottom, xbottom, ybottom); // x-axis
+
+
+
+
+  weight_lbs = weight.weight_lbs;
+  day_weight = weight.day_weight;
+
+  cal_active = activity.cal_active
+  for (var i = 0; i < sleepsummarydate.length; i++) {
+    strokeWeight(1)
+    stroke(255)
+    fill(224,227,255);
+
+     barHeight = total[i] / ((longest-0)/graphheight);
+      let yPos = ybottom - barHeight;
+      let xPos = xtop + 5 + i * bar_width+1;
+      rect(xPos, yPos, bar_width, barHeight);
+
+
+  strokeWeight(2)
+  stroke(165,164,201)
+  //console.log(cal_active[i])
+
+  let steps_x1 = xtop + 5+ bar_width*[i];
+    let steps_y1 = (-steps[i]/maxStepValue)*graphheight+ybottom
+    //let steps_y1 = map(steps[i], 0, maxsteps, height, 0);//map from height to 0
+    //let steps_y2 = map(steps[i + 1], 0, maxsteps, height, 0);//map from height to 0
+    let steps_y2 = -(steps[i+1]/maxStepValue)*graphheight+ybottom
+    let steps_x2 = xtop + 5+ bar_width*[i+1];
+
+    line(steps_x1, steps_y1, steps_x2, steps_y2);
+circle(steps_x1, steps_y1,2)
+  stroke(29,27,119)
+  let weight_x1 = xtop + 5+ bar_width*[i];
+  let weight_y1 = (-(weight_lbs[i]-lightest)/(heaviest-lightest))*graphheight+ybottom;
+  let weight_x2 = xtop + 5+ bar_width*[i+1];
+  let weight_y2 = (-(weight_lbs[i+1]-lightest)/(heaviest-lightest))*graphheight+ybottom;
+  //console.log(weight_y1, weight_y2)
+  line(weight_x1,weight_y1, weight_x2, weight_y2);
+  circle(weight_x1,weight_y1,2)
+  }
+
+
+  // Draw axes
+  strokeWeight(1)
+
+  stroke(0);
+  fill(0);
+
+  line(xtop, ybottom, xbottom+5, ybottom); // x-axis
   line(xtop, ytop, xtop, ybottom); // y-axis
   noStroke(0);
   textAlign(CENTER, CENTER);
-  text("score", xtop, 20); // y-axis label
+  text("Max", xtop, ytop-10); // y-axis label
   textAlign(LEFT, CENTER);
-  text("Date", xbottom, ybottom); // x-axis label
+  text("Date", xbottom+5, ybottom); // x-axis label
+
+  text(message, (xbottom+xtop)/2, ytop-15)
+  //console.log(message)
 }
+
+let message;
+
+  function mouseMoved(){
+    // fill(230, 232, 243);
+    // stroke(230, 232, 243);
+
+  //console.log("mouse move called")
+    for (var i = 0; i<summary_date.length; i++){
+      
+
+      let barHeight = total[i] / ((longest-0)/graphheight);
+      let yPos = ybottom - barHeight;
+      let xPos = xtop + 5 + i * bar_width+1;
+
+      let barHeight2 = -(steps[i]/maxStepValue)*graphheight+ybottom
+      let xPos2 =  xtop + 5+ bar_width*[i];
+    
+
+    let xPos3 = xtop + 5+ bar_width*[i];
+    let barHeight3 = (-(weight_lbs[i]-lightest)/(heaviest-lightest))*graphheight+ybottom;
+   
+      if(mouseX > xPos && mouseX < xPos+bar_width && mouseY > yPos && mouseY < yPos+barHeight){
+        message = "Total Sleep is "+(round(total[i]/3600,2)).toString()+"h on "+summary_date[i];
+        //console.log(message+"is message 1")
+    }
+    if(mouseX > xPos2-5 && mouseX < xPos2+5 && mouseY > barHeight2-5 && mouseY < barHeight2+5){
+      message = "Steps count is "+(steps[i]).toString()+" on "+summary_date[i];
+     //console.log(message+"is message 2")
+
+  } if(mouseX > xPos3-5 && mouseX < xPos3+5 && mouseY > barHeight3-5 && mouseY < barHeight3+5){
+    message = "Weight is "+(weight_lbs[i]).toString()+"lb on "+summary_date[i];
+   console.log(message+"is message 3")
+
+}
+
+
+  }
+  }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);

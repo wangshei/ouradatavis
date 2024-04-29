@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
  duration = "day_weight";
  let latency_height;
 
- xtop = 65;
- ytop = 65;
+ let xtop;
+ let ytop;
  let xbottom;
       let ybottom;
       let graphheight;
@@ -98,14 +98,21 @@ function setup(){
 
 
 function draw(){
+  
+ xtop = divWidth*0.15;
+ ytop = divHeight*0.1;
+ xbottom = divWidth*0.9;
+ ybottom = divHeight*0.8;
+ graphheight = ybottom-ytop;
+
   console.log(sleep);
   divWidth = document.getElementById('movement-graph').clientWidth;
   divHeight = document.getElementById('movement-graph').clientHeight;
   console.log(divWidth + ", " + divHeight);
 
-  xbottom = divWidth-xtop;
-  ybottom = divHeight-ytop;
-  graphheight = ybottom-ytop;
+  // xbottom = divWidth-xtop;
+  // ybottom = divHeight-ytop;
+  // graphheight = ybottom-ytop;
 
   var total = sleep.total;
 
@@ -178,9 +185,9 @@ function draw(){
       }
 
       for (var i = 0; i<day_weight.length; i++){
-       if (i%2==0){
+       if (i%3==0){
         push();
-        translate(xtop + i * bar_width+10, ybottom+5);
+        translate(xtop + i * bar_width+5, ybottom+5);
         rotate(HALF_PI/2); // default is radiants
         text(day_weight[i],0,0);
         //console.log(summary_date[i]);
@@ -192,6 +199,7 @@ function draw(){
       
     for (var i = 0; i<day_weight.length; i++){
 
+      strokeWeight(2)
       stroke(67,1,89);
 
 
@@ -210,9 +218,11 @@ function draw(){
        calories_y2 = (-(cal_active[i+1])/(most_cal))*graphheight+ybottom;
       //console.log(weight_y1, weight_y2)
       line(calories_x1,calories_y1, calories_x2, calories_y2);
+      stroke(0)
+      circle(calories_x1,calories_y1, 2);
       //console.log(`Drawing line at index ${i}: xPos=${calories_x1}, yPos=${calories_y1}, xPos2=${calories_x2}, height=${calories_y2}`);
 
-      stroke(255,226,237);
+      stroke(224,227,255);      
 
        weight_x1 = xtop + 5+ bar_width*[i];
       // console.log(weight_lbs[i] + " is weight right now");
@@ -225,6 +235,8 @@ function draw(){
        weight_y2 = (-(weight_lbs[i+1]-lightest)/(heaviest-lightest))*graphheight+ybottom;
       //console.log(weight_y1, weight_y2)
       line(weight_x1,weight_y1, weight_x2, weight_y2);
+      stroke(0)
+      circle(weight_x1,weight_y1, 2);
       //console.log(`Drawing line at index ${i}: xPos=${weight_x1}, yPos=${weight_y1}, xPos2=${weight_x2}, height=${weight_y2}`);
 
       // noLoop();
@@ -234,7 +246,8 @@ function draw(){
   //}
   
 
-  
+  strokeWeight(1)
+
 
   stroke(0);
 
@@ -252,7 +265,40 @@ function draw(){
 
     textAlign(CENTER, CENTER);
     text("Weight", xbottom, ytop-20);
+    text(message, (xbottom+xtop)/2, ytop-15)
+    console.log(message)
+  }
+
+  let message;
+
+  function mouseMoved(){
+    // fill(230, 232, 243);
+    // stroke(230, 232, 243);
+
+  //console.log("mouse move called")
+    for (var i = 0; i<day_weight.length; i++){
+      
+
+      let xPos2 = xtop + 5+ bar_width*[i];
+      let barHeight2 = (-(cal_active[i])/(most_cal))*graphheight+ybottom;
     
+
+    let xPos3 = xtop + 5+ bar_width*[i];
+    let barHeight3 = (-(weight_lbs[i]-lightest)/(heaviest-lightest))*graphheight+ybottom;
+   
+   
+    if(mouseX > xPos2-5 && mouseX < xPos2+5 && mouseY > barHeight2-5 && mouseY < barHeight2+5){
+      message = "Calories is "+(cal_active[i]).toString()+" on "+day_weight[i];
+     console.log(message+"is message 2")
+
+  } if(mouseX > xPos3-5 && mouseX < xPos3+5 && mouseY > barHeight3-5 && mouseY < barHeight3+5){
+    message = "Weight is "+(weight_lbs[i]).toString()+" on "+day_weight[i];
+   console.log(message+"is message 3")
+
+}
+
+
+  }
   }
 
 

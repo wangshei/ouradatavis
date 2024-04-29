@@ -261,7 +261,7 @@ function draw() {
   //console.log(divHeight)
 
   xtop = divWidth*0.1;
-  ytop = divHeight*0.2;
+  ytop = divHeight*0.1;
   xbottom = divWidth*0.9;
   ybottom = divHeight*0.8;
   graphheight = ybottom-ytop;
@@ -354,7 +354,7 @@ textAlign(RIGHT, CENTER);
 
     let xpos = xtop + 5+ bar_width*[i];
     let ypos =  (-(efficiency[i]-minEfficiency))/(maxEfficiency-minEfficiency)*graphheight+ybottom;
-    circle(xpos, ypos, 4);
+    circle(xpos, ypos, 2);
     //console.log(`Drawing summary date at index ${i}: xpos=${xpos}, ypos=${ypos}`);
   }
 
@@ -379,7 +379,7 @@ textAlign(RIGHT, CENTER);
 
     let stc_xpos = xtop + 5+ bar_width*[i];
     let stc_ypos = -steps[i]/maxStepValue*graphheight+ybottom
-    circle(stc_xpos, stc_ypos, 4);
+    circle(stc_xpos, stc_ypos, 2);
 
   // Draw x and y axis lines and labels
  

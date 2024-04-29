@@ -243,9 +243,9 @@ function draw(){
   //console.log(divWidth + ", " + divHeight);
 
   xtop = divWidth*0.1;
-  ytop = divHeight*0.1;
+  ytop = divHeight*0.08;
   xbottom = divWidth*0.9;
-  ybottom = divHeight*0.9;
+  ybottom = divHeight*0.85;
   graphheight = ybottom-ytop;
   
   var light = sleep.light;
