@@ -1,4 +1,4 @@
-##Project Summary
+##Project Summary##
 
 Identified physicians’ need for understanding large amounts of data provided by client’s wearables (Oura), analyzed key data provided, and created a working data visualization dashboard with a team help physicians quickly process information
 
